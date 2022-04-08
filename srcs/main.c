@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/06 17:11:19 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/08 18:18:09 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,9 +414,34 @@ void	display_wave_nb(t_data *data)
 	free(wave);
 }
 
+void	manage_doors(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (data->doors[++i])
+	{
+		if (data->doors[i]->count != -1 && get_timestamp() - data->doors[i]->last_frame > 100
+			&& (data->doors[i]->x != (int)data->player.x / CUBE_SIZE || data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
+		{
+			if (data->doors[i]->status == 1)
+				data->doors[i]->start += 0.1;
+			else
+				data->doors[i]->start -= 0.1;
+			data->doors[i]->count++;
+			if (data->doors[i]->count == 9)
+			{
+				data->doors[i]->status *= -1;
+				data->doors[i]->count = -1;
+			}
+		}
+	}
+}
+
 void	make_frame(t_data *data)
 {
 	draw_rays(data);
+	manage_doors(data);
 	manage_generators(data, data->generators);
 	attack_sprite(data, data->sprites);
 	draw_sprites(data);
@@ -436,8 +461,12 @@ int	player_can_move(t_data *data, double x, double y)
 		(int)(data->player.y + y * data->fps))
 			&& is_in_map(data, (int)(data->player.x + x * data->fps)
 				/ CUBE_SIZE, (int)(data->player.y + y * data->fps) / CUBE_SIZE)
-			&& data->vars.map[(int)(data->player.y + y * data->fps) / CUBE_SIZE]
-				[(int)(data->player.x + x * data->fps) / CUBE_SIZE] == '0');
+			&& (data->vars.map[(int)(data->player.y + y * data->fps) / CUBE_SIZE]
+				[(int)(data->player.x + x * data->fps) / CUBE_SIZE] == '0'
+				|| (data->vars.map[(int)(data->player.y + y * data->fps) / CUBE_SIZE]
+				[(int)(data->player.x + x * data->fps) / CUBE_SIZE] == 'D'
+					&& ((x && !there_is_door(data, data->player.x + x * data->fps, data->player.y + y * data->fps, EAST))
+						|| (y && !there_is_door(data, data->player.x + x * data->fps, data->player.y + y * data->fps, NORTH))))));
 }
 
 void	reset_jump_values(t_data *data, int *power)
@@ -633,9 +662,9 @@ int	render_next_frame(void *data1)
 		bonus_controls(data, &timer, &calls);
 	}
 	make_frame(data);
-	mlx_mouse_move(data->vars.mlx, data->vars.win,
-		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-//	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+//	mlx_mouse_move(data->vars.mlx, data->vars.win,
+//		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	return (0);
 }
 

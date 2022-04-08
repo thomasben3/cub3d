@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:39:20 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/06 13:15:58 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:12:40 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,14 +436,14 @@ int	set_player_and_sprites(t_data *data, char **map)
 				return (ft_putstr_error("Error\ninvalid component on the map\n"));
 		}
 	}
+	data->generators[count] = NULL;
 	if (ret == 0)
 		return (ft_putstr_error("Error\nyou must have at least one player starting position.\n"));
 	return (0);
 }
 
-t_generator	**count_generators(char **map)
+int	count_component(char **map, char c)
 {
-	t_generator	**new_gen;
 	int	x;
 	int	y;
 	int	count;
@@ -454,22 +454,53 @@ t_generator	**count_generators(char **map)
 	{
 		x = -1;
 		while (map[y][++x])
-			if (map[y][x] == 'G')
+			if (map[y][x] == c)
 				count++;
 	}
-	new_gen = (t_generator **)malloc(sizeof(t_generator *) * (count + 1));
-	if (!new_gen)
-		return (NULL);
-	new_gen[count] = 0;
-	return (new_gen);
+	return (count);
+}
+
+int	set_doors(t_data *data, char **map)
+{
+	int	x;
+	int	y;
+	int	count;
+
+	count = 0;
+	y = -1;
+	while (map[++y])
+	{
+		x = -1;
+		while (map[y][++x])
+		{
+			if (map[y][x] == 'D')
+			{
+				data->doors[count] = (t_door *)malloc(sizeof(t_door));
+				if (!data->doors[count])
+					return (1);
+				data->doors[count]->status = 1;
+				data->doors[count]->x = x;
+				data->doors[count]->y = y;
+				data->doors[count]->start = 0;
+				data->doors[count++]->count = -1;
+			}
+		}
+	}
+	data->doors[count] = NULL;
+	return (0);
 }
 
 int	fill_map(t_data *data)
 {
 	if (!is_map_surrounded(&data->vars, data->vars.map))
 		return (ft_putstr_error("Error\nmap must be surrounded by walls\n"));
-	data->generators = count_generators(data->vars.map);
+	data->generators = (t_generator **)malloc(sizeof(t_generator *) * (count_component(data->vars.map, 'G') + 1));
 	if (!data->generators)
+		return (1);
+	data->doors = (t_door **)malloc(sizeof(t_door *) * (count_component(data->vars.map, 'D') + 1));
+	if (!data->doors)
+		return (1);
+	if (set_doors(data, data->vars.map))
 		return (1);
 	if (set_player_and_sprites(data, data->vars.map))
 		return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:10:13 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/06 17:11:33 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/08 18:25:33 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	mouse_move(int x, int y, void *data1)
 int	mouse_click(int button, int x, int y, void *data1)
 {
 	t_data	*data;
+	int i = 0;
 
 	(void)x;
 	(void)y;
@@ -117,9 +118,14 @@ int	mouse_click(int button, int x, int y, void *data1)
 				[(int)(data->player.x - data->player.dx * CUBE_SIZE)
 				/ CUBE_SIZE]
 			== 'D')
-		data->vars.map[
-			(int)(data->player.y + data->player.dy * CUBE_SIZE) / CUBE_SIZE]
-		[(int)(data->player.x - data->player.dx * CUBE_SIZE) / CUBE_SIZE]
-			= '0';
+	{
+		while (data->doors[i] && (data->doors[i]->x != (int)(data->player.x - data->player.dx * CUBE_SIZE) / CUBE_SIZE || data->doors[i]->y != (int)(data->player.y + data->player.dy * CUBE_SIZE) / CUBE_SIZE))
+			i++;
+		if (data->doors[i] && data->doors[i]->count == -1)
+		{
+			data->doors[i]->count = 0;
+			data->doors[i]->last_frame = get_timestamp();
+		}
+	}
 	return (0);
 }

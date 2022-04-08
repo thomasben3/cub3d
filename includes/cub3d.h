@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/06 17:15:30 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/08 18:18:49 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 # define	FOV				66
 # define	FISHEYE			0
 
-# define	V_MOV_SPEED		(1.5 * 2)
-# define	H_MOV_SPEED		(0.75 * 2)
+# define	V_MOV_SPEED		3
+# define	H_MOV_SPEED		1.5
 # define	ROTATION_SPEED	(1)
 
 # define	DEGREE			0.01745329252
@@ -42,7 +42,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include "../mlx_linux/mlx.h"
+# include "../mlx/mlx.h"
 
 typedef	struct s_vars
 {
@@ -111,7 +111,18 @@ typedef struct s_list
 {
 	struct s_list	*next;
 	t_sprite		sprite;
-}				t_list;
+}
+				t_list;
+
+typedef struct s_door
+{
+	int		status;
+	int		x;
+	int		y;
+	int		count;
+	float	start;
+	long	last_frame;
+}				t_door;
 
 typedef	struct s_ray
 {
@@ -175,6 +186,7 @@ typedef	struct s_data
 	int				fps;
 	t_img			hands[4];
 	int				hands_to_display;
+	t_door			**doors;
 	t_generator		**generators;
 }				t_data;
 
@@ -238,7 +250,9 @@ int		ft_strlen(char *str);
 
 /*--------------------- check_N_S_E_W.c --------------------*/
 
-void	find_distance(t_data *data, t_ray *ray);
+int	there_is_door(t_data *data, double rx, double ry, int face);
+
+void	find_distance(t_data *data, t_ray *ray, int face);
 void	check_north(t_data *data, t_ray *ray);
 void	check_south(t_data *data, t_ray *ray);
 void	check_east(t_data *data, t_ray *ray);

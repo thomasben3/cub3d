@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprites.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:50:54 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/06 17:18:45 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/08 17:53:30 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,15 @@ int	is_free_x(t_data *data, t_sprite *sprite, int deplacement, int marge)
 	y = sprite->y;
 	if (deplacement >= 0)
 		return (is_in_map(data, (x + deplacement + marge) / CUBE_SIZE, y / CUBE_SIZE)
-			&& (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge) / CUBE_SIZE] == '0')
+			&& (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge) / CUBE_SIZE] == '0'
+				|| (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge) / CUBE_SIZE] == 'D'
+					&& !there_is_door(data, x + deplacement + marge, y, EAST)))
 			&& (!there_is_sprite(data, sprite, x + deplacement + marge, y) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
 	else
 		return (is_in_map(data, (x + deplacement - marge) / CUBE_SIZE, y / CUBE_SIZE)
-			&& (data->vars.map[y / CUBE_SIZE][(x + deplacement - marge) / CUBE_SIZE] == '0')
+			&& ((data->vars.map[y / CUBE_SIZE][(x + deplacement - marge) / CUBE_SIZE] == '0'
+				|| (data->vars.map[y / CUBE_SIZE][(x + deplacement - marge) / CUBE_SIZE] == 'D'
+					&& !there_is_door(data, x + deplacement - marge, y, EAST))))
 			&& (!there_is_sprite(data, sprite, x + deplacement - marge, y) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
 }
 
@@ -90,11 +94,15 @@ int	is_free_y(t_data *data, t_sprite *sprite, int deplacement, int marge)
 	y = sprite->y;
 	if (deplacement >= 0)
 		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement + marge) / CUBE_SIZE)
-			&& (data->vars.map[(y + deplacement + marge) / CUBE_SIZE][x / CUBE_SIZE] == '0')
+			&& (data->vars.map[(y + deplacement + marge) / CUBE_SIZE][x / CUBE_SIZE] == '0'
+				|| (data->vars.map[(y + deplacement + marge) / CUBE_SIZE][x / CUBE_SIZE] == 'D'
+				&& !there_is_door(data, x, y + deplacement + marge, NORTH)))
 			&& (!there_is_sprite(data, sprite, x, y + deplacement + marge) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
 	else
 		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement - marge) / CUBE_SIZE)
-			&& (data->vars.map[(y + deplacement - marge) / CUBE_SIZE][x / CUBE_SIZE] == '0')
+			&& (data->vars.map[(y + deplacement - marge) / CUBE_SIZE][x / CUBE_SIZE] == '0'
+				|| (data->vars.map[(y + deplacement - marge) / CUBE_SIZE][x / CUBE_SIZE] == 'D'
+					&& !there_is_door(data, x, y + deplacement - marge, NORTH)))
 			&& (!there_is_sprite(data, sprite, x, y + deplacement - marge) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
 }
 
