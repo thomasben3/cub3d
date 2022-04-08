@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:49:48 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/08 17:06:02 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/08 19:10:11 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	there_is_door(t_data *data, double rx, double ry, int face)
 {
 	int	i;
-(void)face;
+
 	i = -1;
 	while (data->doors[++i])
 	{

@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:45:06 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/08 14:35:53 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/08 19:08:49 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,32 @@ void	draw_sky(int x, int start, int end, t_data *data)
 void	draw_raycast(t_data *data, t_ray *ray, int face)
 {
 	t_img	*texture;
+	int		decalage;
 
 	texture = &data->img[face];
+	decalage = 0;
 	if (data->vars.map[(int)ray->ry / CUBE_SIZE]
 		[(int)ray->rx / CUBE_SIZE] == 'D')
+	{
 		texture = &data->img[CEILING];
+		while (data->doors[decalage] && (data->doors[decalage]->x != (int)ray->rx / CUBE_SIZE || data->doors[decalage]->y != (int)ray->ry / CUBE_SIZE))
+			decalage++;
+		decalage = data->doors[decalage]->start * texture->width;
+	}
 	if (face == NORTH)
 		draw_text_vline(data, texture, *ray,
-			(((int)ray->rx % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width);
+			(((int)ray->rx % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width - decalage);
 	else if (face == SOUTH)
 		draw_text_vline(data, texture, *ray,
 			(texture->width - 1) - ((((int)ray->rx % CUBE_SIZE)
-					/ (double)CUBE_SIZE) * texture->width));
+					/ (double)CUBE_SIZE) * texture->width) + decalage);
 	else if (face == EAST)
 		draw_text_vline(data, texture, *ray,
-			(((int)ray->ry % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width);
+			(((int)ray->ry % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width - decalage);
 	else if (face == WEST)
 		draw_text_vline(data, texture, *ray,
 			(texture->width - 1) - ((((int)ray->ry % CUBE_SIZE)
-					/ (double)CUBE_SIZE) * texture->width));
+					/ (double)CUBE_SIZE) * texture->width) + decalage);
 	draw_sky(ray->nb, 0, ray->line_start, data);
 	if (DEBUG)
 		draw_vline(ray, SCREEN_HEIGHT, data, create_rgb(80, 47, 0));

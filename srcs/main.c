@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/08 18:18:09 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/08 19:14:44 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -422,7 +422,7 @@ void	manage_doors(t_data *data)
 	while (data->doors[++i])
 	{
 		if (data->doors[i]->count != -1 && get_timestamp() - data->doors[i]->last_frame > 100
-			&& (data->doors[i]->x != (int)data->player.x / CUBE_SIZE || data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
+			&& (data->doors[i]->status == 1 || data->doors[i]->x != (int)data->player.x / CUBE_SIZE || data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
 		{
 			if (data->doors[i]->status == 1)
 				data->doors[i]->start += 0.1;
