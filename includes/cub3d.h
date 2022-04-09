@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 02:26:42 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 20:57:10 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ typedef	struct s_data
 	t_img			hands[4];
 	int				hands_to_display;
 	t_door			**doors;
+	t_img			door_text;
 	t_generator		**generators;
 }				t_data;
 
@@ -240,6 +241,7 @@ void	init_hands(t_data *data);
 
 /*------------------- load_sprites_imgs.c ------------------*/
 
+void		load_img(t_data *data, t_img *img, char *path);
 void		load_chopper_imgs(t_data *data, t_sprite_text *chopper);
 void		load_luffy_imgs(t_data *data, t_sprite_text *luffy);
 void		load_teach_imgs(t_data *data, t_sprite_text *teach);

@@ -1,7 +1,7 @@
-NO		assets/textures/lol.xpm
-SO 		assets/textures/lol.xpm
-EA		assets/textures/wall.xpm
-WE 		assets/textures/wall.xpm
+NO		assets/textures/woodwall.xpm
+SO 		assets/textures/woodwall.xpm
+EA		assets/textures/paperwall.xpm
+WE 		assets/textures/paperwall.xpm
 F		assets/parquet.xpm
 C		assets/moonlight.xpm
 

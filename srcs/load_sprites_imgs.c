@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 01:55:22 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 02:27:10 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 21:19:27 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,12 @@ void	load_chopper_imgs(t_data *data, t_sprite_text *chopper)
 
 void	load_luffy_imgs(t_data *data, t_sprite_text *luffy)
 {
-	load_img(data, &luffy->text[0], "assets/luffy/luffy0.xpm");
-	load_img(data, &luffy->text[1], "assets/luffy/luffy1.xpm");
-	load_img(data, &luffy->text[2], "assets/luffy/luffy2.xpm");
-	load_img(data, &luffy->text[3], "assets/luffy/luffy3.xpm");
-	load_img(data, &luffy->text[4], "assets/luffy/luffy4.xpm");
-	load_img(data, &luffy->text[5], "assets/luffy/luffy5.xpm");
+	load_img(data, &luffy->text[0], "assets/luffy/luffy5.xpm");
+	load_img(data, &luffy->text[1], "assets/luffy/luffy4.xpm");
+	load_img(data, &luffy->text[2], "assets/luffy/luffy3.xpm");
+	load_img(data, &luffy->text[3], "assets/luffy/luffy2.xpm");
+	load_img(data, &luffy->text[4], "assets/luffy/luffy1.xpm");
+	load_img(data, &luffy->text[5], "assets/luffy/luffy0.xpm");
 	load_img(data, &luffy->attack_text[0], "assets/luffy/luffy_attack0.xpm");
 	load_img(data, &luffy->attack_text[1], "assets/luffy/luffy_attack1.xpm");
 	load_img(data, &luffy->dead_text[0], "assets/luffy/luffy_dead0.xpm");

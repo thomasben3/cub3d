@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 04:33:55 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 20:26:26 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ void	free_all(t_data *data)
 	free_double_array(data->vars.map);
 	i = -1;
 	while (++i < 6)
+	{
 		mlx_destroy_image(data->vars.mlx, data->img[i].img);
+		data->img[i].img = NULL;
+	}
 	while (data->sprites)
 	{
 		tmp = data->sprites;

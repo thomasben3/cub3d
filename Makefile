@@ -14,7 +14,7 @@ CC			=	gcc
 
 RM			=	rm -f
 
-CFLAGS		=	-Wall -Wextra -Werror -g3 #-fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror #-g3 -fsanitize=address
 
 PATH_MLX	=	mlx_linux
 

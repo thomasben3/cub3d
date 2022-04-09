@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:39:20 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 04:35:02 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 19:57:56 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,7 @@ int	set_doors(t_data *data, char **map, int x, int y)
 				data->doors[count]->status = 1;
 				data->doors[count]->x = x;
 				data->doors[count]->y = y;
-				data->doors[count]->start = 0;
+				data->doors[count]->start = 0.0;
 				data->doors[count++]->count = -1;
 			}
 		}
@@ -465,5 +465,6 @@ int	parse_all(t_data *data, char *path)
 		return (1);
 	if (fill_map(data))
 		return (1);
+	load_img(data, &data->door_text, "assets/door.xpm");
 	return (0);
 }

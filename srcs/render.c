@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:45:06 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/08 19:08:49 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 15:57:54 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	draw_raycast(t_data *data, t_ray *ray, int face)
 	if (data->vars.map[(int)ray->ry / CUBE_SIZE]
 		[(int)ray->rx / CUBE_SIZE] == 'D')
 	{
-		texture = &data->img[CEILING];
+		texture = &data->door_text;
 		while (data->doors[decalage] && (data->doors[decalage]->x != (int)ray->rx / CUBE_SIZE || data->doors[decalage]->y != (int)ray->ry / CUBE_SIZE))
 			decalage++;
 		decalage = data->doors[decalage]->start * texture->width;

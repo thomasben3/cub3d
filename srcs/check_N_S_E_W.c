@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:49:48 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/08 19:10:11 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 20:08:46 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	there_is_door(t_data *data, double rx, double ry, int face)
 	while (data->doors[++i])
 	{
 		if (data->doors[i]->x == (int)rx / CUBE_SIZE && data->doors[i]->y == (int)ry / CUBE_SIZE
-		&& (((face == NORTH || face == SOUTH) && (int)rx % CUBE_SIZE >= data->doors[i]->start * CUBE_SIZE)
-			|| ((face == EAST || face == WEST) && (int)ry % CUBE_SIZE >= data->doors[i]->start * CUBE_SIZE)))
+		&& (((face == NORTH || face == SOUTH) && (int)rx % CUBE_SIZE + 1 >= data->doors[i]->start * CUBE_SIZE)
+			|| ((face == EAST || face == WEST) && (int)ry % CUBE_SIZE + 1 >= data->doors[i]->start * CUBE_SIZE)))
 			return (1);
 	}
 	return (0);
