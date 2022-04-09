@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/08 18:18:49 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 02:26:42 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,14 @@ int		sprite_is_facing_left(t_data *data, t_sprite *sprite);
 int		create_trgb(int t, int r, int g, int b);
 
 
+/*-------------------- create_sprites.c -------------------*/
+
+t_sprite	new_sprite(int x, int y);
+t_sprite	new_teach(t_data *data, int x, int y);
+t_sprite	new_chopper(t_data *data, int x, int y);
+t_sprite	new_luffy(t_data *data, int x, int y);
+
+
 /*------------------------- main.c ------------------------*/
 
 double	fix_angle(double angle);
@@ -230,13 +238,17 @@ void	init_keys(t_keys *keys);
 void	init_hands(t_data *data);
 
 
+/*------------------- load_sprites_imgs.c ------------------*/
+
+void		load_chopper_imgs(t_data *data, t_sprite_text *chopper);
+void		load_luffy_imgs(t_data *data, t_sprite_text *luffy);
+void		load_teach_imgs(t_data *data, t_sprite_text *teach);
+
+
 /*------------------------ parsing.c -----------------------*/
 
 int			parse_all(t_data *data, char *path);
 void		free_sprite_imgs(t_data *data, t_sprite_text *texture);
-void		load_chopper_imgs(t_data *data, t_sprite_text *chopper);
-void		load_luffy_imgs(t_data *data, t_sprite_text *luffy);
-void		load_teach_imgs(t_data *data, t_sprite_text *teach);
 t_sprite	new_luffy(t_data *data, int x, int y);
 t_sprite	new_teach(t_data *data, int x, int y);
 t_sprite	new_chopper(t_data *data, int x, int y);

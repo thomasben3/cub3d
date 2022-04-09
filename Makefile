@@ -1,6 +1,10 @@
 NAME		=	cub3D
 
-SRCS		= 	srcs/main.c srcs/sprites.c srcs/parsing.c srcs/utils.c srcs/gnl.c srcs/init.c srcs/render.c srcs/check_N_S_E_W.c srcs/events.c
+SRCS		= 	srcs/main.c \
+				srcs/sprites.c srcs/create_sprites.c \
+				srcs/parsing.c srcs/gnl.c srcs/load_sprites_imgs.c \
+				srcs/render.c srcs/check_N_S_E_W.c \
+				srcs/utils.c srcs/init.c srcs/events.c
 
 OBJS 		=	${SRCS:.c=.o}
 
@@ -10,7 +14,7 @@ CC			=	gcc
 
 RM			=	rm -f
 
-CFLAGS		=	-Wall -Wextra -Werror #-g3 -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror -g3 #-fsanitize=address
 
 PATH_MLX	=	mlx_linux
 

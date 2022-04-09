@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/08 19:14:44 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/09 04:33:55 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ void	free_all(t_data *data)
 	while (data->generators[++i])
 		free(data->generators[i]);
 	free(data->generators);
+	i = -1;
+	while (data->doors[++i])
+		free(data->doors[i]);
+	free(data->doors);
 }
 
 void	free_sprite_imgs(t_data *data, t_sprite_text *texture)
@@ -421,8 +425,11 @@ void	manage_doors(t_data *data)
 	i = -1;
 	while (data->doors[++i])
 	{
-		if (data->doors[i]->count != -1 && get_timestamp() - data->doors[i]->last_frame > 100
-			&& (data->doors[i]->status == 1 || data->doors[i]->x != (int)data->player.x / CUBE_SIZE || data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
+		if (data->doors[i]->count != -1
+			&& get_timestamp() - data->doors[i]->last_frame > 100
+			&& (data->doors[i]->status == 1
+				|| data->doors[i]->x != (int)data->player.x / CUBE_SIZE
+				|| data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
 		{
 			if (data->doors[i]->status == 1)
 				data->doors[i]->start += 0.1;
@@ -461,12 +468,17 @@ int	player_can_move(t_data *data, double x, double y)
 		(int)(data->player.y + y * data->fps))
 			&& is_in_map(data, (int)(data->player.x + x * data->fps)
 				/ CUBE_SIZE, (int)(data->player.y + y * data->fps) / CUBE_SIZE)
-			&& (data->vars.map[(int)(data->player.y + y * data->fps) / CUBE_SIZE]
+			&& (data->vars.map[(int)(data->player.y
+				+ y * data->fps) / CUBE_SIZE]
 				[(int)(data->player.x + x * data->fps) / CUBE_SIZE] == '0'
-				|| (data->vars.map[(int)(data->player.y + y * data->fps) / CUBE_SIZE]
+				|| (data->vars.map[(int)(data->player.y
+				+ y * data->fps) / CUBE_SIZE]
 				[(int)(data->player.x + x * data->fps) / CUBE_SIZE] == 'D'
-					&& ((x && !there_is_door(data, data->player.x + x * data->fps, data->player.y + y * data->fps, EAST))
-						|| (y && !there_is_door(data, data->player.x + x * data->fps, data->player.y + y * data->fps, NORTH))))));
+					&& ((x && !there_is_door(data, data->player.x
+					+ x * data->fps, data->player.y + y * data->fps, EAST))
+						|| (y && !there_is_door(data, data->player.x
+						+ x * data->fps,
+						data->player.y + y * data->fps, NORTH))))));
 }
 
 void	reset_jump_values(t_data *data, int *power)
