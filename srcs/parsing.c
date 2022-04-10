@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:39:20 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 19:57:56 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 03:38:21 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ int	check_for_identifier(t_data *data, char *str)
 		return (1);
 	data->img[face].img = mlx_xpm_file_to_image(data->vars.mlx, tmp,
 			&data->img[face].width, &data->img[face].height);
+	free(tmp);
 	if (!data->img[face].img)
 		return (ft_putstr_error("Error\nTexture not found\n"));
 	data->img[face].imgptr = (int *)mlx_get_data_addr(
 			data->img[face].img, &data->img[face].bitPerPx,
 			&data->img[face].sizeLine, &data->img[face].endian);
-	free(tmp);
 	return (0);
 }
 
@@ -201,6 +201,7 @@ int	parse_map(
 	fd = open(config_path, O_RDONLY);
 	if (fd < 0)
 	{
+		free(data->vars.map);
 		perror("Error\n");
 		return (1);
 	}
@@ -212,7 +213,10 @@ int	parse_map(
 		i++;
 	}
 	if (fill_map_array(data, &line, 0, fd))
+	{
+		free_double_array(data->vars.map);
 		return (1);
+	}
 	free(line);
 	close(fd);
 	return (0);
@@ -347,8 +351,15 @@ int	set_player_and_sprites(t_data *data, char **map)
 	{
 		x = -1;
 		while (map[y][++x])
+		{
 			if (treat_char(data, x, y, &count))
+			{
+				y = -1;
+				while (++y < count)
+					free(data->generators[y]);
 				return (1);
+			}
+		}
 	}
 	data->generators[count] = NULL;
 	if (data->player.x == -1)
@@ -415,10 +426,13 @@ int	fill_map(t_data *data)
 			* (count_component(data->vars.map, 'D') + 1));
 	if (!data->doors)
 		return (1);
-	if (set_doors(data, data->vars.map, -1, -1))
+	if (set_player_and_sprites(data, data->vars.map) || set_doors(data, data->vars.map, -1, -1))
+	{
+		list_clear(&data->sprites);
+		free(data->generators);
+		free(data->doors);
 		return (1);
-	if (set_player_and_sprites(data, data->vars.map))
-		return (1);
+	}
 	return (0);
 }
 
@@ -443,7 +457,9 @@ int	parse_all(t_data *data, char *path)
 	{
 		if (check_for_identifier(data, line))
 		{
-			// BESOIN DE CLEAR LES TEXTURES DEJA ENREGISTREES
+			free_textures(data);
+			free(line);
+			close(fd);
 			return (1);
 		}
 		free(line);
@@ -458,13 +474,23 @@ int	parse_all(t_data *data, char *path)
 		|| data->img[EAST].img == NULL || data->img[WEST].img == NULL
 		|| data->img[FLOOR].img == NULL || data->img[CEILING].img == NULL)
 	{
-		// BESOIN DE CLEAR LES TEXTURES DEJA ENREGISTREES
+		free_textures(data);
 		return (ft_putstr_error("Error\ntexture identifier missing\n"));
 	}
 	if (parse_map(data, fd, description_map_start, path))
+	{
+		free_textures(data);
 		return (1);
+	}
 	if (fill_map(data))
+	{
+		free_textures(data);
+		free_double_array(data->vars.map);
 		return (1);
+	}
 	load_img(data, &data->door_text, "assets/door.xpm");
+	load_chopper_imgs(data, &data->sprite_text[CHOPPER]);
+	load_luffy_imgs(data, &data->sprite_text[LUFFY]);
+	load_teach_imgs(data, &data->sprite_text[TEACH]);
 	return (0);
 }

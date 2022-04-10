@@ -6,14 +6,14 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 20:57:10 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 03:26:13 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define	DEBUG			0
+# define	DEBUG			1
 
 # define	SCREEN_WIDTH	1080
 # define	SCREEN_HEIGHT	720
@@ -212,6 +212,9 @@ t_sprite	new_luffy(t_data *data, int x, int y);
 /*------------------------- main.c ------------------------*/
 
 double	fix_angle(double angle);
+void	free_textures(t_data *data);
+void	list_clear(t_list **list);
+void	free_all(t_data *data);
 double	distance(double ax, double ay, double bx, double by);
 long	get_timestamp(void);
 int		create_rgb(int r, int g, int b);

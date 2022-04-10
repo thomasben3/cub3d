@@ -6,11 +6,19 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 20:26:26 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 03:49:31 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+
+int	is_point_cub(char *str)
+{
+	int	end;
+
+	end = ft_strlen(str) - 1;
+	return (str[end - 3] == '.' && str[end - 2] == 'c' && str[end - 1] == 'u' && str[end] == 'b');
+}
 
 int	is_in_map(t_data *data, int x, int y)
 {
@@ -27,24 +35,38 @@ double	fix_angle(double f)
 	return (f);
 }
 
-void	free_all(t_data *data)
+void	free_textures(t_data *data)
 {
-	int		i;
-	t_list	*tmp;
+	int	i;
 
-	free_double_array(data->vars.map);
 	i = -1;
 	while (++i < 6)
 	{
-		mlx_destroy_image(data->vars.mlx, data->img[i].img);
+		if (data->img[i].img)
+			mlx_destroy_image(data->vars.mlx, data->img[i].img);
 		data->img[i].img = NULL;
 	}
-	while (data->sprites)
+}
+
+void	list_clear(t_list **list)
+{
+	t_list *tmp;
+	
+	while (*list)
 	{
-		tmp = data->sprites;
-		data->sprites = data->sprites->next;
+		tmp = *list;
+		*list = (*list)->next;
 		free(tmp);
 	}
+}
+
+void	free_all(t_data *data)
+{
+	int		i;
+
+	free_double_array(data->vars.map);
+	free_textures(data);
+	list_clear(&data->sprites);
 	i = -1;
 	while (data->generators[++i])
 		free(data->generators[i]);
@@ -55,18 +77,23 @@ void	free_all(t_data *data)
 	free(data->doors);
 }
 
-void	free_sprite_imgs(t_data *data, t_sprite_text *texture)
+void	free_sprites_imgs(t_data *data)
 {
+	int	j;
 	int	i;
-
-	i = -1;
-	while (++i < 6)
-		mlx_destroy_image(data->vars.mlx, texture->text[i].img);
-	mlx_destroy_image(data->vars.mlx, texture->attack_text[0].img);
-	mlx_destroy_image(data->vars.mlx, texture->attack_text[1].img);
-	i = -1;
-	while (++i < 4)
-		mlx_destroy_image(data->vars.mlx, texture->dead_text[i].img);
+	
+	j = -1;
+	while (++j < 3)
+	{
+		i = -1;
+		while (++i < 6)
+			mlx_destroy_image(data->vars.mlx, data->sprite_text[j].text[i].img);
+		mlx_destroy_image(data->vars.mlx, data->sprite_text[j].attack_text[0].img);
+		mlx_destroy_image(data->vars.mlx, data->sprite_text[j].attack_text[1].img);
+		i = -1;
+		while (++i < 4)
+			mlx_destroy_image(data->vars.mlx, data->sprite_text[j].dead_text[i].img);
+	}
 }
 
 int	ft_exit(t_data *data)
@@ -74,12 +101,11 @@ int	ft_exit(t_data *data)
 	int	i;
 
 	free_all(data);
-	free_sprite_imgs(data, &data->sprite_text[CHOPPER]);
-	free_sprite_imgs(data, &data->sprite_text[LUFFY]);
-	free_sprite_imgs(data, &data->sprite_text[TEACH]);
+	free_sprites_imgs(data);
 	i = -1;
 	while (++i < 4)
 		mlx_destroy_image(data->vars.mlx, data->hands[i].img);
+	mlx_destroy_image(data->vars.mlx, data->door_text.img);
 	mlx_destroy_image(data->vars.mlx, data->frame.img);
 	mlx_destroy_window(data->vars.mlx, data->vars.win);
 	free(data->vars.mlx);
@@ -704,20 +730,24 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (ft_putstr_error("Error\nbad argument.\n"));
+	else if (!is_point_cub(argv[1]))
+		return (ft_putstr_error("Error\nmap description must end by '.cub'.\n"));
 	data.pause = -1;
 	data.vars.config_file = argv[1];
 	srand(time(NULL));
 
 	data.vars.mlx = mlx_init();
+	if (!data.vars.mlx)
+		return (1);
 	data.vars.win
 		= mlx_new_window(data.vars.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "CUB3D");
 
 	if (parse_all(&data, argv[1]))
+	{
+		mlx_destroy_window(data.vars.mlx, data.vars.win);
+		free(data.vars.mlx);
 		return (1);
-
-	load_chopper_imgs(&data, &data.sprite_text[CHOPPER]);
-	load_luffy_imgs(&data, &data.sprite_text[LUFFY]);
-	load_teach_imgs(&data, &data.sprite_text[TEACH]);
+	}
 
 	data.camera_height = 0.5;
 	data.horizon_line = SCREEN_HEIGHT / 2;
