@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 03:49:31 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 19:26:47 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	is_point_cub(char *str)
 	int	end;
 
 	end = ft_strlen(str) - 1;
-	return (str[end - 3] == '.' && str[end - 2] == 'c' && str[end - 1] == 'u' && str[end] == 'b');
+	return (str[end - 3] == '.' && str[end - 2] == 'c'
+		&& str[end - 1] == 'u' && str[end] == 'b');
 }
 
 int	is_in_map(t_data *data, int x, int y)
@@ -50,8 +51,8 @@ void	free_textures(t_data *data)
 
 void	list_clear(t_list **list)
 {
-	t_list *tmp;
-	
+	t_list	*tmp;
+
 	while (*list)
 	{
 		tmp = *list;
@@ -81,18 +82,21 @@ void	free_sprites_imgs(t_data *data)
 {
 	int	j;
 	int	i;
-	
+
 	j = -1;
 	while (++j < 3)
 	{
 		i = -1;
 		while (++i < 6)
 			mlx_destroy_image(data->vars.mlx, data->sprite_text[j].text[i].img);
-		mlx_destroy_image(data->vars.mlx, data->sprite_text[j].attack_text[0].img);
-		mlx_destroy_image(data->vars.mlx, data->sprite_text[j].attack_text[1].img);
+		mlx_destroy_image(data->vars.mlx,
+			data->sprite_text[j].attack_text[0].img);
+		mlx_destroy_image(data->vars.mlx,
+			data->sprite_text[j].attack_text[1].img);
 		i = -1;
 		while (++i < 4)
-			mlx_destroy_image(data->vars.mlx, data->sprite_text[j].dead_text[i].img);
+			mlx_destroy_image(data->vars.mlx,
+				data->sprite_text[j].dead_text[i].img);
 	}
 }
 
@@ -591,7 +595,7 @@ void	dead_screen(t_data *data, long *timer, int *calls)
 			data->horizon_line = SCREEN_HEIGHT / 2;
 			data->hands_to_display = 0;
 			free_all(data);
-			parse_all(data, data->vars.config_file);
+			parse_all(data, data->vars.config_file, -1);
 		}
 		*timer = get_timestamp();
 	}
@@ -742,12 +746,17 @@ int	main(int argc, char **argv)
 	data.vars.win
 		= mlx_new_window(data.vars.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "CUB3D");
 
-	if (parse_all(&data, argv[1]))
+	if (parse_all(&data, argv[1], -1))
 	{
 		mlx_destroy_window(data.vars.mlx, data.vars.win);
 		free(data.vars.mlx);
 		return (1);
 	}
+	load_img(&data, &data.door_text, "assets/door.xpm");
+	init_hands(&data);
+	load_chopper_imgs(&data, &data.sprite_text[CHOPPER]);
+	load_luffy_imgs(&data, &data.sprite_text[LUFFY]);
+	load_teach_imgs(&data, &data.sprite_text[TEACH]);
 
 	data.camera_height = 0.5;
 	data.horizon_line = SCREEN_HEIGHT / 2;
@@ -758,8 +767,6 @@ int	main(int argc, char **argv)
 	data.frame.imgptr
 		= (int *)mlx_get_data_addr(data.frame.img, &data.frame.bitPerPx,
 			&data.frame.sizeLine, &data.frame.endian);
-
-	init_hands(&data);
 
 	data.last_frame_time = get_timestamp();
 	data.fps = 50;

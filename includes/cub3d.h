@@ -6,14 +6,14 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 03:26:13 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 19:26:37 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define	DEBUG			1
+# define	DEBUG			0
 
 # define	SCREEN_WIDTH	1080
 # define	SCREEN_HEIGHT	720
@@ -252,7 +252,7 @@ void		load_teach_imgs(t_data *data, t_sprite_text *teach);
 
 /*------------------------ parsing.c -----------------------*/
 
-int			parse_all(t_data *data, char *path);
+int			parse_all(t_data *data, char *path, int description_map_start);
 void		free_sprite_imgs(t_data *data, t_sprite_text *texture);
 t_sprite	new_luffy(t_data *data, int x, int y);
 t_sprite	new_teach(t_data *data, int x, int y);

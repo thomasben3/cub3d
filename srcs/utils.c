@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:43:00 by tbensem           #+#    #+#             */
-/*   Updated: 2022/03/25 18:19:57 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 04:10:57 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	free_double_array(char **array)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (array[++i])
@@ -24,10 +24,11 @@ void	free_double_array(char **array)
 
 int	ft_putstr_error(char *str)
 {
-	int i = -1;
+	int	i;
 
 	if (!str || !*str)
 		return (1);
+	i = -1;
 	while (str[++i])
 		if (write(2, &str[i], 1) == -1)
 			return (1);

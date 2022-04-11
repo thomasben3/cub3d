@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:39:20 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 03:38:21 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 19:26:38 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ int	malloc_map(t_data *data, int *description_map_start, int fd)
 	(*description_map_start)--;
 	get_map_height_and_width(data, fd,
 		description_map_start, get_next_line(fd));
+	close(fd);
 	data->vars.map
 		= (char **)malloc(sizeof(char *) * (data->vars.mapHeight + 1));
 	if (!data->vars.map)
@@ -196,15 +197,10 @@ int	parse_map(
 
 	if (malloc_map(data, &description_map_start, fd))
 		return (1);
-	close(fd);
 	i = -2;
 	fd = open(config_path, O_RDONLY);
 	if (fd < 0)
-	{
-		free(data->vars.map);
-		perror("Error\n");
 		return (1);
-	}
 	line = get_next_line(fd);
 	while (*line && i < description_map_start)
 	{
@@ -343,9 +339,7 @@ int	set_player_and_sprites(t_data *data, char **map)
 	int	x;
 	int	count;
 
-	data->sprites = NULL;
 	count = 0;
-	data->player.x = -1;
 	y = -1;
 	while (map[++y])
 	{
@@ -426,7 +420,10 @@ int	fill_map(t_data *data)
 			* (count_component(data->vars.map, 'D') + 1));
 	if (!data->doors)
 		return (1);
-	if (set_player_and_sprites(data, data->vars.map) || set_doors(data, data->vars.map, -1, -1))
+	data->sprites = NULL;
+	data->player.x = -1;
+	if (set_player_and_sprites(data, data->vars.map)
+		|| set_doors(data, data->vars.map, -1, -1))
 	{
 		list_clear(&data->sprites);
 		free(data->generators);
@@ -436,13 +433,37 @@ int	fill_map(t_data *data)
 	return (0);
 }
 
-int	parse_all(t_data *data, char *path)
+int	parse_identifier(t_data *data, int fd, int *description_map_start)
 {
-	int		fd;
-	int		description_map_start;
 	char	*line;
 
-	description_map_start = 0;
+	line = get_next_line(fd);
+	while (*line)
+	{
+		if (check_for_identifier(data, line))
+		{
+			free(line);
+			return (1);
+		}
+		free(line);
+		if (data->img[NORTH].img != NULL && data->img[SOUTH].img != NULL
+			&& data->img[EAST].img != NULL && data->img[WEST].img != NULL
+			&& data->img[FLOOR].img != NULL && data->img[CEILING].img != NULL)
+			break ;
+		(*description_map_start)++;
+		line = get_next_line(fd);
+	}
+	if (data->img[NORTH].img == NULL || data->img[SOUTH].img == NULL
+		|| data->img[EAST].img == NULL || data->img[WEST].img == NULL
+		|| data->img[FLOOR].img == NULL || data->img[CEILING].img == NULL)
+		return (ft_putstr_error("Error\ntexture identifier missing\n"));
+	return (0);
+}
+
+int	parse_all(t_data *data, char *path, int description_map_start)
+{
+	int		fd;
+
 	while (++description_map_start < 6)
 		data->img[description_map_start].img = NULL;
 	description_map_start = 0;
@@ -452,34 +473,11 @@ int	parse_all(t_data *data, char *path)
 		perror("Error\n");
 		return (1);
 	}
-	line = get_next_line(fd);
-	while (*line)
-	{
-		if (check_for_identifier(data, line))
-		{
-			free_textures(data);
-			free(line);
-			close(fd);
-			return (1);
-		}
-		free(line);
-		if (data->img[NORTH].img != NULL && data->img[SOUTH].img != NULL
-			&& data->img[EAST].img != NULL && data->img[WEST].img != NULL
-			&& data->img[FLOOR].img != NULL && data->img[CEILING].img != NULL)
-			break ;
-		description_map_start++;
-		line = get_next_line(fd);
-	}
-	if (data->img[NORTH].img == NULL || data->img[SOUTH].img == NULL
-		|| data->img[EAST].img == NULL || data->img[WEST].img == NULL
-		|| data->img[FLOOR].img == NULL || data->img[CEILING].img == NULL)
+	if (parse_identifier(data, fd, &description_map_start)
+		|| parse_map(data, fd, description_map_start, path))
 	{
 		free_textures(data);
-		return (ft_putstr_error("Error\ntexture identifier missing\n"));
-	}
-	if (parse_map(data, fd, description_map_start, path))
-	{
-		free_textures(data);
+		close(fd);
 		return (1);
 	}
 	if (fill_map(data))
@@ -488,9 +486,5 @@ int	parse_all(t_data *data, char *path)
 		free_double_array(data->vars.map);
 		return (1);
 	}
-	load_img(data, &data->door_text, "assets/door.xpm");
-	load_chopper_imgs(data, &data->sprite_text[CHOPPER]);
-	load_luffy_imgs(data, &data->sprite_text[LUFFY]);
-	load_teach_imgs(data, &data->sprite_text[TEACH]);
 	return (0);
 }

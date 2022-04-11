@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:49:48 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/09 20:08:46 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/10 19:35:48 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,14 @@ int	there_is_door(t_data *data, double rx, double ry, int face)
 	i = -1;
 	while (data->doors[++i])
 	{
-		if (data->doors[i]->x == (int)rx / CUBE_SIZE && data->doors[i]->y == (int)ry / CUBE_SIZE
-		&& (((face == NORTH || face == SOUTH) && (int)rx % CUBE_SIZE + 1 >= data->doors[i]->start * CUBE_SIZE)
-			|| ((face == EAST || face == WEST) && (int)ry % CUBE_SIZE + 1 >= data->doors[i]->start * CUBE_SIZE)))
+		if (data->doors[i]->x == (int)rx / CUBE_SIZE
+			&& data->doors[i]->y == (int)ry / CUBE_SIZE
+			&& (((face == NORTH || face == SOUTH)
+					&& (int)rx % CUBE_SIZE + 1
+					>= data->doors[i]->start * CUBE_SIZE)
+				|| ((face == EAST || face == WEST)
+					&& (int)ry % CUBE_SIZE + 1
+					>= data->doors[i]->start * CUBE_SIZE)))
 			return (1);
 	}
 	return (0);
@@ -33,7 +38,7 @@ void	find_distance(t_data *data, t_ray *ray, int face)
 	int	map_x;
 	int	map_y;
 	int	max;
-	
+
 	max = sqrt((data->vars.mapWidth * data->vars.mapWidth)
 			+ (data->vars.mapHeight * data->vars.mapHeight));
 	i = 0;
@@ -45,7 +50,8 @@ void	find_distance(t_data *data, t_ray *ray, int face)
 			&& data->vars.map[map_y][map_x] == '1')
 			break ;
 		else if (is_in_map(data, map_x, map_y)
-			&& (data->vars.map[map_y][map_x] == 'D' && there_is_door(data, ray->rx + ray->rxo * 0.5, ray->ry + ray->ryo * 0.5, face)))
+			&& (data->vars.map[map_y][map_x] == 'D' && there_is_door(data,
+				ray->rx + ray->rxo * 0.5, ray->ry + ray->ryo * 0.5, face)))
 		{
 			ray->rx += ray->rxo * 0.5;
 			ray->ry += ray->ryo * 0.5;
