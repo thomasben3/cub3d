@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
+/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 19:26:37 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/11 16:48:40 by thbensem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include "../mlx/mlx.h"
+# include "../mlx_linux/mlx.h"
 
 typedef	struct s_vars
 {

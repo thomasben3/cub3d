@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprites.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
+/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:50:54 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/08 17:53:30 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/11 17:58:38 by thbensem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ t_img	*get_sprite_texture(t_player *player, t_sprite *sprite, double angle)
 	}
 	else if (sprite->status == 2)
 		return (&sprite->text->attack_text[1]);
-	else if (distance(player->x, player->y, sprite->x, sprite->y) < (CUBE_SIZE * 0.8) && sprite->status != 2 && player->life > 0)
+	else if (distance(player->x, player->y, sprite->x, sprite->y)
+		< (CUBE_SIZE * 0.8) && sprite->status != 2 && player->life > 0)
 	{
 		attack_player(player, angle, sprite);
 		return (&sprite->text->attack_text[0]);
@@ -47,7 +48,7 @@ t_img	*get_sprite_texture(t_player *player, t_sprite *sprite, double angle)
 
 int	there_is_sprite(t_data *data, t_sprite *sprite, int x, int y)
 {
-	t_list *curr;
+	t_list	*curr;
 
 	curr = data->sprites;
 	while (curr)
@@ -57,7 +58,8 @@ int	there_is_sprite(t_data *data, t_sprite *sprite, int x, int y)
 			curr = curr->next;
 			continue ;
 		}
-		if (curr->sprite.life > 0 && distance(x, y, curr->sprite.x, curr->sprite.y) < CUBE_SIZE * 0.5)
+		if (curr->sprite.life > 0
+			&& distance(x, y, curr->sprite.x, curr->sprite.y) < CUBE_SIZE * 0.5)
 			return (1);
 		curr = curr->next;
 	}
@@ -72,38 +74,54 @@ int	is_free_x(t_data *data, t_sprite *sprite, int deplacement, int marge)
 	x = sprite->x;
 	y = sprite->y;
 	if (deplacement >= 0)
-		return (is_in_map(data, (x + deplacement + marge) / CUBE_SIZE, y / CUBE_SIZE)
-			&& (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge) / CUBE_SIZE] == '0'
-				|| (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge) / CUBE_SIZE] == 'D'
-					&& !there_is_door(data, x + deplacement + marge, y, EAST)))
-			&& (!there_is_sprite(data, sprite, x + deplacement + marge, y) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
+		return (is_in_map(data, (x + deplacement + marge) / CUBE_SIZE,
+				y / CUBE_SIZE)
+			&& (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge)
+				/ CUBE_SIZE] == '0'
+			|| (data->vars.map[y / CUBE_SIZE][(x + deplacement + marge)
+				/ CUBE_SIZE] == 'D'
+			&& !there_is_door(data, x + deplacement + marge, y, EAST)))
+			&& (!there_is_sprite(data, sprite, x + deplacement + marge, y)
+				|| sprite->attack_x != -1000 || sprite->attack_y != -1000));
 	else
-		return (is_in_map(data, (x + deplacement - marge) / CUBE_SIZE, y / CUBE_SIZE)
-			&& ((data->vars.map[y / CUBE_SIZE][(x + deplacement - marge) / CUBE_SIZE] == '0'
-				|| (data->vars.map[y / CUBE_SIZE][(x + deplacement - marge) / CUBE_SIZE] == 'D'
-					&& !there_is_door(data, x + deplacement - marge, y, EAST))))
-			&& (!there_is_sprite(data, sprite, x + deplacement - marge, y) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
+		return (is_in_map(data, (x + deplacement - marge) / CUBE_SIZE,
+				y / CUBE_SIZE)
+			&& ((data->vars.map[y / CUBE_SIZE][(x + deplacement - marge)
+					/ CUBE_SIZE] == '0'
+				|| (data->vars.map[y / CUBE_SIZE][(x + deplacement - marge)
+					/ CUBE_SIZE] == 'D'
+				&& !there_is_door(data, x + deplacement - marge, y, EAST))))
+			&& (!there_is_sprite(data, sprite, x + deplacement - marge, y)
+				|| sprite->attack_x != -1000 || sprite->attack_y != -1000));
 }
 
 int	is_free_y(t_data *data, t_sprite *sprite, int deplacement, int marge)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = sprite->x;
 	y = sprite->y;
 	if (deplacement >= 0)
-		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement + marge) / CUBE_SIZE)
-			&& (data->vars.map[(y + deplacement + marge) / CUBE_SIZE][x / CUBE_SIZE] == '0'
-				|| (data->vars.map[(y + deplacement + marge) / CUBE_SIZE][x / CUBE_SIZE] == 'D'
-				&& !there_is_door(data, x, y + deplacement + marge, NORTH)))
-			&& (!there_is_sprite(data, sprite, x, y + deplacement + marge) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
+		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement + marge)
+				/ CUBE_SIZE)
+			&& (data->vars.map[(y + deplacement + marge) / CUBE_SIZE]
+				[x / CUBE_SIZE] == '0'
+				|| (data->vars.map[(y + deplacement + marge) / CUBE_SIZE]
+					[x / CUBE_SIZE] == 'D'
+					&& !there_is_door(data, x, y + deplacement + marge, NORTH)))
+			&& (!there_is_sprite(data, sprite, x, y + deplacement + marge)
+				|| sprite->attack_x != -1000 || sprite->attack_y != -1000));
 	else
-		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement - marge) / CUBE_SIZE)
-			&& (data->vars.map[(y + deplacement - marge) / CUBE_SIZE][x / CUBE_SIZE] == '0'
-				|| (data->vars.map[(y + deplacement - marge) / CUBE_SIZE][x / CUBE_SIZE] == 'D'
+		return (is_in_map(data, x / CUBE_SIZE, (y + deplacement - marge)
+				/ CUBE_SIZE)
+			&& (data->vars.map[(y + deplacement - marge) / CUBE_SIZE]
+				[x / CUBE_SIZE] == '0'
+				|| (data->vars.map[(y + deplacement - marge) / CUBE_SIZE]
+					[x / CUBE_SIZE] == 'D'
 					&& !there_is_door(data, x, y + deplacement - marge, NORTH)))
-			&& (!there_is_sprite(data, sprite, x, y + deplacement - marge) || sprite->attack_x != -1000 || sprite->attack_y != -1000));
+			&& (!there_is_sprite(data, sprite, x, y + deplacement - marge)
+				|| sprite->attack_x != -1000 || sprite->attack_y != -1000));
 }
 
 int	create_trgb(int t, int r, int g, int b)
@@ -111,17 +129,23 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	move_sprite(t_data *data, t_sprite *sprite, double scale, t_img **texture)
+void	move_sprite(
+		t_data *data, t_sprite *sprite, double scale, t_img **texture)
 {
-	if (sprite->status != 2 && sprite->life > 0 && data->player.life > 0 && (sprite->attack_x == -1000 && sprite->attack_y == -1000)
-		&& distance(data->player.x, data->player.y, sprite->x, sprite->y) < CUBE_SIZE * 25)
+	if (sprite->status != 2 && sprite->life > 0 && data->player.life > 0
+		&& (sprite->attack_x == -1000 && sprite->attack_y == -1000)
+		&& distance(data->player.x, data->player.y, sprite->x, sprite->y)
+		< CUBE_SIZE * 25)
 	{
-		if (is_free_x(data, sprite, -cos(sprite->angle) * sprite->speed * data->fps, ((*texture)->width) * scale))
-			sprite->x -= cos(sprite->angle) * (sprite->speed * (data->fps));		
-		if (is_free_y(data, sprite, -sin(sprite->angle) * sprite->speed * data->fps, ((*texture)->width) * scale))
+		if (is_free_x(data, sprite, -cos(sprite->angle)
+				* sprite->speed * data->fps, ((*texture)->width) * scale))
+			sprite->x -= cos(sprite->angle) * (sprite->speed * (data->fps));
+		if (is_free_y(data, sprite, -sin(sprite->angle)
+				* sprite->speed * data->fps, ((*texture)->width) * scale))
 			sprite->y += -sin(sprite->angle) * (sprite->speed * (data->fps));
- 		if (distance(data->player.x, data->player.y, sprite->x, sprite->y) < (CUBE_SIZE * 0.8))
- 			*texture = &sprite->text->attack_text[0];
+		if (distance(data->player.x, data->player.y, sprite->x, sprite->y)
+			< (CUBE_SIZE * 0.8))
+			*texture = &sprite->text->attack_text[0];
 	}
 }
 
@@ -136,13 +160,20 @@ int	sprite_is_facing_left(t_data *data, t_sprite *sprite)
 	disty = data->player.y - sprite->y;
 	if (disty < 0)
 		disty = -disty;
-	if ((sprite->life <= 0 && sprite->dead_position == 1) || (sprite->life > 0 && (((distx < disty) && ((data->player.y < sprite->y && sprite->angle > M_PI / 2) || (data->player.y > sprite->y && sprite->angle > -(M_PI / 2))))
-			|| ((distx > disty) && ((data->player.x < sprite->x && sprite->angle > 0) || (data->player.x > sprite->x && sprite->angle < 0))))))
+	if ((sprite->life <= 0 && sprite->dead_position == 1) || (sprite->life > 0
+			&& (((distx < disty) && ((data->player.y < sprite->y
+							&& sprite->angle > M_PI / 2)
+						|| (data->player.y > sprite->y
+							&& sprite->angle > -(M_PI / 2))))
+				|| ((distx > disty)
+					&& ((data->player.x < sprite->x && sprite->angle > 0)
+						|| (data->player.x > sprite->x
+							&& sprite->angle < 0))))))
 		return (1);
 	return (0);
 }
 
-void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)//, int dist)
+void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)
 {
 	int		x;
 	int		y;
@@ -184,8 +215,6 @@ void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)//
 				
 				text_x = (double)(end_x - 1 - x) / (double)((texture->width) * (scale));
 				text_y = (double)(y1 - 1 - y) / (double)((texture->height) * (scale));
-				if (text_x < 0 || text_x > 1.0 || text_y < 0 || text_y > 1.0)//A VIRER
-					printf("x: %f, y: %f\n", text_x, text_y);
 				if (sprite_is_facing_left(data, sprite))
 					color = texture->imgptr[(int)((texture->height - 1) - (int)((texture->height - 1) * text_y)) * (texture->sizeLine / 4) + ((texture->width - 1) - (int)(((texture->width) - 1) * text_x))];
 				else

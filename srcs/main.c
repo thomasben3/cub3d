@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
+/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 19:26:47 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/11 17:28:38 by thbensem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -459,17 +459,17 @@ void	manage_doors(t_data *data)
 	while (data->doors[++i])
 	{
 		if (data->doors[i]->count != -1
-			&& get_timestamp() - data->doors[i]->last_frame > 100
+			&& get_timestamp() - data->doors[i]->last_frame > 50
 			&& (data->doors[i]->status == 1
 				|| data->doors[i]->x != (int)data->player.x / CUBE_SIZE
 				|| data->doors[i]->y != (int)data->player.y / CUBE_SIZE))
 		{
 			if (data->doors[i]->status == 1)
-				data->doors[i]->start += 0.1;
+				data->doors[i]->start += 0.05;
 			else
-				data->doors[i]->start -= 0.1;
+				data->doors[i]->start -= 0.05;
 			data->doors[i]->count++;
-			if (data->doors[i]->count == 9)
+			if (data->doors[i]->count == 18)
 			{
 				data->doors[i]->status *= -1;
 				data->doors[i]->count = -1;
@@ -707,9 +707,9 @@ int	render_next_frame(void *data1)
 		bonus_controls(data, &timer, &calls);
 	}
 	make_frame(data);
-//	mlx_mouse_move(data->vars.mlx, data->vars.win,
-//		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	mlx_mouse_move(data->vars.mlx, data->vars.win,
+		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+//	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	return (0);
 }
 
