@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/11 17:28:38 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/11 21:56:01 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -707,9 +707,9 @@ int	render_next_frame(void *data1)
 		bonus_controls(data, &timer, &calls);
 	}
 	make_frame(data);
-	mlx_mouse_move(data->vars.mlx, data->vars.win,
-		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-//	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+//	mlx_mouse_move(data->vars.mlx, data->vars.win,
+//		SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	mlx_mouse_move(data->vars.win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprites.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:50:54 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/11 17:58:38 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/12 07:12:39 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,60 +173,83 @@ int	sprite_is_facing_left(t_data *data, t_sprite *sprite)
 	return (0);
 }
 
-void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)
+void	get_sprite_pixel(
+	t_data *data, t_sprite *sprite, t_norm *norm)
 {
-	int		x;
-	int		y;
-	int		color;
-	
-	t_img	*texture;
+	int	color;
 
-	sprite->angle = atan2(sprite->y - data->player.y, sprite->x - data->player.x);
-	texture = get_sprite_texture(&data->player, sprite, sprite->angle);
-	move_sprite(data, sprite, scale, &texture);
+	if (sprite_is_facing_left(data, sprite))
+		color = sprite->text_in_use->imgptr[
+			(int)((sprite->text_in_use->height - 1)
+				- (int)((sprite->text_in_use->height - 1) * norm->text_y))
+			*(sprite->text_in_use->sizeLine / 4)
+			+ ((sprite->text_in_use->width - 1)
+				- (int)(((sprite->text_in_use->width) - 1) * norm->text_x))];
+	else
+		color = sprite->text_in_use->imgptr[
+			(int)((sprite->text_in_use->height - 1)
+				* (1 - norm->text_y)) *(sprite->text_in_use->sizeLine / 4)
+			+ ((int)((sprite->text_in_use->width - 1) * norm->text_x))];
+	if (color != create_trgb(255, 0, 0, 0))
+		data->frame.imgptr[norm->y * data->frame.sizeLine / 4 + norm->x]
+			= shadow_color(color, distance(data->player.x,
+					data->player.y, sprite->x, sprite->y));
+}
 
-	double	text_x;
-	double	text_y;
-	int		tmp = -((texture->width * scale) / 2);
-	
-	int		end_x;
-	
-	x = x1 - ((texture->width * scale) / 2);
-	end_x = x1 + ((texture->width * scale) / 2);
-	if (DEBUG >= 2)
+int	need_to_draw_sprite_px(t_data *data, t_sprite *sprite, t_norm *norm)
+{
+	return (distance(data->player.x - data->player.dx, data->player.y
+			+ data->player.dy, sprite->x, sprite->y)
+		< distance(data->player.x, data->player.y, sprite->x, sprite->y)
+		&& sprite->x_on_screen + norm->tmp >= 0
+		&& sprite->x_on_screen + norm->tmp < SCREEN_WIDTH
+		&& (distance(data->player.x, data->player.y, sprite->x,
+				sprite->y) * cos(fix_angle(data->player.dir
+					- data->ray_save[(int)sprite->x_on_screen
+						+ norm->tmp].Angle))
+			<= data->ray_save[(int)sprite->x_on_screen + norm->tmp].length)
+		&& norm->x >= 0 && norm->y >= 0 && norm->x < SCREEN_WIDTH
+		&& norm->y < SCREEN_HEIGHT);
+}
+
+void	draw_sprite(
+		t_data *data, t_sprite *s, t_img *t, double scale)
+{
+	t_norm	norm;
+
+	norm.tmp = -((t->width * scale) / 2);
+	norm.x = s->x_on_screen - ((t->width * scale) / 2);
+	norm.end_x = s->x_on_screen + ((t->width * scale) / 2);
+	while (norm.x < norm.end_x && norm.x < SCREEN_WIDTH)
 	{
-		if (x1 >= 0 && y1>=0 && x1 < SCREEN_WIDTH && y1 < SCREEN_HEIGHT)
-			draw_square(data, x1, y1, 10);
-		if (DEBUG >= 3)
-			return ;
-	}
-	while (x < end_x && x < SCREEN_WIDTH)
-	{
-		y = y1 - (texture->height * (scale));
-		if (y < 0)
-			y = 0;
-		while (y < y1 && y < SCREEN_HEIGHT - 1)
+		norm.y = s->y_on_screen - (t->height * (scale));
+		if (norm.y < 0)
+			norm.y = 0;
+		while (norm.y < s->y_on_screen && norm.y < SCREEN_HEIGHT - 1)
 		{
-			if (distance(data->player.x - data->player.dx, data->player.y + data->player.dy, sprite->x, sprite->y) < distance(data->player.x, data->player.y, sprite->x, sprite->y)
-				&& x1 + tmp >= 0 && x1 + tmp < SCREEN_WIDTH
-				&& (distance(data->player.x, data->player.y, sprite->x, sprite->y) * cos(fix_angle(data->player.dir - data->ray_save[x1 + tmp].Angle)) <= data->ray_save[x1 + tmp].length)
-				&& x >= 0 && y >= 0 && x < SCREEN_WIDTH && y < SCREEN_HEIGHT)
+			if (need_to_draw_sprite_px(data, s, &norm))
 			{
-				
-				text_x = (double)(end_x - 1 - x) / (double)((texture->width) * (scale));
-				text_y = (double)(y1 - 1 - y) / (double)((texture->height) * (scale));
-				if (sprite_is_facing_left(data, sprite))
-					color = texture->imgptr[(int)((texture->height - 1) - (int)((texture->height - 1) * text_y)) * (texture->sizeLine / 4) + ((texture->width - 1) - (int)(((texture->width) - 1) * text_x))];
-				else
-					color = texture->imgptr[(int)((texture->height - 1) * (1 - text_y)) * (texture->sizeLine / 4) + ((int)(((texture->width - 1)) * text_x))];
-				if (color != create_trgb(255, 0, 0, 0))
-					data->frame.imgptr[y * data->frame.sizeLine / 4 + x] = shadow_color(color, distance(data->player.x, data->player.y, sprite->x, sprite->y));
+				norm.text_x = (double)(norm.end_x - 1 - norm.x)
+					/ (double)((s->text_in_use->width) * (scale));
+				norm.text_y = (double)(s->y_on_screen - 1 - norm.y)
+					/ (double)((s->text_in_use->height) * (scale));
+				get_sprite_pixel(data, s, &norm);
 			}
-			y++;
+			(norm.y)++;
 		}
-		tmp++;
-		x++;
+		(norm.tmp)++;
+		(norm.x)++;
 	}
+}
+
+void	manage_one_sprite(t_data *data, t_sprite *sprite, double scale)
+{
+	sprite->angle
+		= atan2(sprite->y - data->player.y, sprite->x - data->player.x);
+	sprite->text_in_use
+		= get_sprite_texture(&data->player, sprite, sprite->angle);
+	move_sprite(data, sprite, scale, &sprite->text_in_use);
+	draw_sprite(data, sprite, sprite->text_in_use, scale);
 	if (sprite->last_frame != -1 && get_timestamp() - sprite->last_frame > 80)
 	{
 		sprite->count++;
@@ -234,7 +257,8 @@ void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)
 	}
 	if (sprite->count == 6 && sprite->life > 0)
 		sprite->count = 0;
-	else if (sprite->life <= 0 && sprite->attack_x == -1000 && sprite->attack_y == -1000 && sprite->count == 100)
+	else if (sprite->life <= 0 && sprite->attack_x == -1000
+		&& sprite->attack_y == -1000 && sprite->count == 100)
 		sprite->status = -1;
 	if (sprite->last_frame == -1)
 		sprite->last_frame = get_timestamp();
@@ -242,8 +266,8 @@ void	draw_sprite(t_data *data, t_sprite *sprite, int x1, int y1, double scale)
 
 void	attack_sprite(t_data *data, t_list *list)
 {
-	t_list	*curr;
-	t_list	*tmp;
+	t_list		*curr;
+	t_list		*tmp;
 	t_sprite	*sprite;
 
 	tmp = list;
@@ -252,7 +276,9 @@ void	attack_sprite(t_data *data, t_list *list)
 		curr = tmp;
 		tmp = tmp->next;
 		sprite = &curr->sprite;
-		if ((sprite->attack_x != -1000 || sprite->attack_y != -1000 || sprite->status == 2) && (sprite->last_frame == -1 || get_timestamp() - sprite->last_frame > 10))
+		if ((sprite->attack_x != -1000 || sprite->attack_y != -1000
+				|| sprite->status == 2) && (sprite->last_frame == -1
+				|| get_timestamp() - sprite->last_frame > 10))
 		{
 			if ((sprite->attack_x != -1000 || sprite->attack_y != -1000))
 			{
@@ -268,10 +294,11 @@ void	attack_sprite(t_data *data, t_list *list)
 					if (sprite->z < -(0.45 * CUBE_SIZE))
 						sprite->z = -(0.45 * CUBE_SIZE);
 				}
-				if (is_free_x(data, sprite, -sprite->attack_x * (CUBE_SIZE * 0.08), sprite->text->text[0].width / 2))
+				if (is_free_x(data, sprite, -sprite->attack_x
+						* (CUBE_SIZE * 0.08), sprite->text->text[0].width / 2))
 						sprite->x -= sprite->attack_x * (CUBE_SIZE * 0.08);
-
-				if (is_free_y(data, sprite, sprite->attack_y * (CUBE_SIZE * 0.08), sprite->text->text[0].width / 2))
+				if (is_free_y(data, sprite, sprite->attack_y
+						* (CUBE_SIZE * 0.08), sprite->text->text[0].width / 2))
 					sprite->y += sprite->attack_y * (CUBE_SIZE * 0.08);
 				sprite->calls++;
 				if (sprite->calls == 20)
@@ -330,7 +357,9 @@ void	sort_list(t_data *data, t_list **list)
 	curr = *list;
 	while (curr && curr->next)
 	{
-		if (distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) < distance(data->player.x, data->player.y, curr->next->sprite.x, curr->next->sprite.y))
+		if (distance(data->player.x, data->player.y,
+				curr->sprite.x, curr->sprite.y) < distance(data->player.x,
+				data->player.y, curr->next->sprite.x, curr->next->sprite.y))
 		{
 			tmp = curr->sprite;
 			curr->sprite = curr->next->sprite;
@@ -342,8 +371,14 @@ void	sort_list(t_data *data, t_list **list)
 
 void	draw_sprites(t_data *data)
 {
-	t_list *curr;
-	t_list *tmp;
+	t_list	*curr;
+	t_list	*tmp;
+	float	sz;
+	float	sy;
+	float	sx;
+	float	a;
+	float	b;
+	double	tmpangle;
 
 	sort_list(data, &data->sprites);
 	tmp = data->sprites;
@@ -351,25 +386,28 @@ void	draw_sprites(t_data *data)
 	{
 		curr = tmp;
 		tmp = tmp->next;
-		float sx=curr->sprite.x-data->player.x; //temp float variables
-		float sy=curr->sprite.y-data->player.y;
-		float sz=(curr->sprite.z * 2) * data->camera_height;	
-
-		float a=sy*(data->player.dx)+sx*(data->player.dy); 
-		float b=sx*(data->player.dx)-sy*(data->player.dy); 
-		sx=a; sy=b;	
-
-		sx=sx*((CUBE_SIZE * 0.80)/sy)+(SCREEN_WIDTH/2); //convert to screen x,y
-		sy=sz*((CUBE_SIZE)/sy)+(data->horizon_line);
-
-		if (data->player.attack && distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) < CUBE_SIZE && sx > SCREEN_WIDTH * 0.3 && sx < SCREEN_WIDTH * 0.7
+		sx = curr->sprite.x - data->player.x;
+		sy = curr->sprite.y - data->player.y;
+		sz = (curr->sprite.z * 2) * data->camera_height;
+		a = sy * (data->player.dx) + sx * (data->player.dy);
+		b = sx * (data->player.dx) - sy * (data->player.dy);
+		sx = a;
+		sy = b;
+		curr->sprite.x_on_screen = sx * ((CUBE_SIZE * 0.80) / sy) + (SCREEN_WIDTH / 2);
+		curr->sprite.y_on_screen = sz * ((CUBE_SIZE) / sy) + (data->horizon_line);
+		if (data->player.attack && distance(data->player.x, data->player.y,
+				curr->sprite.x, curr->sprite.y) < CUBE_SIZE
+			&& curr->sprite.x_on_screen > SCREEN_WIDTH * 0.3 && curr->sprite.x_on_screen < SCREEN_WIDTH * 0.7
 			&& curr->sprite.life > 0)
 		{
 			data->player.attack = 0;
-			double	tmpangle = atan2(curr->sprite.y - data->player.y, curr->sprite.x - data->player.x);
-			if (data->player.in_jump && data->player.attack_dir_x == 0 && data->player.attack_dir_y == 0)
+			tmpangle = atan2(curr->sprite.y - data->player.y,
+					curr->sprite.x - data->player.x);
+			if (data->player.in_jump && data->player.attack_dir_x == 0
+				&& data->player.attack_dir_y == 0)
 			{
-				if (curr->sprite.life - 2 <= 0 && sprite_is_facing_left(data, &curr->sprite))
+				if (curr->sprite.life - 2 <= 0
+					&& sprite_is_facing_left(data, &curr->sprite))
 					curr->sprite.dead_position = 1;
 				curr->sprite.life -= 2;
 				curr->sprite.attack_x = -cos(tmpangle) * 2;
@@ -378,7 +416,8 @@ void	draw_sprites(t_data *data)
 			}
 			else
 			{
-				if (curr->sprite.life - 1 <= 0 && sprite_is_facing_left(data, &curr->sprite))
+				if (curr->sprite.life - 1 <= 0
+					&& sprite_is_facing_left(data, &curr->sprite))
 					curr->sprite.dead_position = 1;
 				curr->sprite.life--;
 				curr->sprite.attack_x = -cos(tmpangle);
@@ -392,23 +431,20 @@ void	draw_sprites(t_data *data)
 			attack_sprite(data, curr);
 			return ;
 		}
-
-		double	tmpAngle = data->player.dir + ((sx - SCREEN_WIDTH / 2) * (DEGREE / (SCREEN_WIDTH / FOV)));
-		if (tmpAngle < data->player.dir - ((SCREEN_WIDTH / 2 + 10) * (DEGREE / (SCREEN_WIDTH / FOV))))
-			tmpAngle = data->player.dir - ((SCREEN_WIDTH / 2 + 10) * (DEGREE / (SCREEN_WIDTH / FOV)));
-		else if (tmpAngle > data->player.dir + ((SCREEN_WIDTH / 2 + 10) * (DEGREE / (SCREEN_WIDTH / FOV))))
-			tmpAngle = data->player.dir + ((SCREEN_WIDTH / 2 + 10) * (DEGREE / (SCREEN_WIDTH / FOV)));
-		//if (distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) < CUBE_SIZE * 15)
-			//&& distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) > CUBE_SIZE * 0.1) pour le lag piste a explorer
-		{
-			//printf("orginal len: %f, then %f\n", distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y), (distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) * cos(fix_angle(data->player.dir + ((sx - SCREEN_WIDTH / 2) * DEGREE)))));
-		//	if (sx>0 && sx < SCREEN_WIDTH)
-		//		printf("true: %f, false: %f\n", cos(data->player.dir + ((sx - SCREEN_WIDTH / 2) * (DEGREE / (SCREEN_WIDTH / FOV)))));
-			if (curr->sprite.life <= 0)
-				draw_sprite(data, &curr->sprite, sx, sy, (SCREEN_WIDTH * 2) / (distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) * cos(fix_angle(data->player.dir - tmpAngle))));
-			else
-				draw_sprite(data, &curr->sprite, sx, sy, (SCREEN_WIDTH * 2) / (distance(data->player.x, data->player.y, curr->sprite.x, curr->sprite.y) * cos(fix_angle(data->player.dir - tmpAngle))));
-		}
+		tmpangle = data->player.dir + ((curr->sprite.x_on_screen - SCREEN_WIDTH / 2)
+				* (DEGREE / (SCREEN_WIDTH / FOV)));
+		if (tmpangle < data->player.dir - ((SCREEN_WIDTH / 2 + 10)
+				* (DEGREE / (SCREEN_WIDTH / FOV))))
+			tmpangle = data->player.dir - ((SCREEN_WIDTH / 2 + 10)
+					* (DEGREE / (SCREEN_WIDTH / FOV)));
+		else if (tmpangle > data->player.dir + ((SCREEN_WIDTH / 2 + 10)
+				* (DEGREE / (SCREEN_WIDTH / FOV))))
+			tmpangle = data->player.dir + ((SCREEN_WIDTH / 2 + 10)
+					* (DEGREE / (SCREEN_WIDTH / FOV)));
+		manage_one_sprite(data, &curr->sprite, (SCREEN_WIDTH * 2)
+			/ (distance(data->player.x, data->player.y,
+					curr->sprite.x, curr->sprite.y)
+				* cos(fix_angle(data->player.dir - tmpangle))));
 	}
 	free_dead_sprites(&data->sprites);
 }

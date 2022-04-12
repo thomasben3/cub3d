@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thbensem <thbensem@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/11 16:48:40 by thbensem         ###   ########.fr       */
+/*   Updated: 2022/04/12 07:06:17 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define	DEBUG			0
+# define	DEBUG			1
 
 # define	SCREEN_WIDTH	1080
 # define	SCREEN_HEIGHT	720
@@ -42,7 +42,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include "../mlx_linux/mlx.h"
+# include "../mlx/mlx.h"
 
 typedef	struct s_vars
 {
@@ -89,6 +89,9 @@ typedef	struct s_sprite
 	double		y;
 	double		z;
 
+	int			x_on_screen;
+	int			y_on_screen;
+
 	double		angle;
 
 	int			status;
@@ -96,6 +99,7 @@ typedef	struct s_sprite
 	double		attack_x;
 	double		attack_y;
 	t_sprite_text	*text;
+	t_img			*text_in_use;
 
 	int			attack_damage;
 	float		speed;
@@ -107,12 +111,21 @@ typedef	struct s_sprite
 	int			power;
 }				t_sprite;
 
+typedef struct s_norm
+{
+	int		x;
+	int		y;
+	int		tmp;
+	int		end_x;
+	double	text_x;
+	double	text_y;
+}				t_norm;
+
 typedef struct s_list
 {
 	struct s_list	*next;
 	t_sprite		sprite;
-}
-				t_list;
+}				t_list;
 
 typedef struct s_door
 {
