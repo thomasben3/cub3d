@@ -6,11 +6,11 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 01:55:22 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 21:19:27 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/13 03:54:07 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 void	load_img(t_data *data, t_img *img, char *path)
 {

@@ -6,15 +6,15 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 01:48:05 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/09 01:49:53 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/13 04:02:36 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 t_sprite	new_sprite(int x, int y)
 {
-	t_sprite sprite;
+	t_sprite	sprite;
 
 	sprite.attack_y = -1000;
 	sprite.attack_x = -1000;
@@ -32,7 +32,7 @@ t_sprite	new_sprite(int x, int y)
 
 t_sprite	new_teach(t_data *data, int x, int y)
 {
-	t_sprite teach;
+	t_sprite	teach;
 
 	teach = new_sprite(x, y);
 	teach.life = 5;
@@ -44,7 +44,7 @@ t_sprite	new_teach(t_data *data, int x, int y)
 
 t_sprite	new_chopper(t_data *data, int x, int y)
 {
-	t_sprite chopper;
+	t_sprite	chopper;
 
 	chopper = new_sprite(x, y);
 	chopper.life = 1;
@@ -56,7 +56,7 @@ t_sprite	new_chopper(t_data *data, int x, int y)
 
 t_sprite	new_luffy(t_data *data, int x, int y)
 {
-	t_sprite luffy;
+	t_sprite	luffy;
 
 	luffy = new_sprite(x, y);
 	luffy.life = 3;

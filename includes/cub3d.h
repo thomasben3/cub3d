@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/12 07:06:17 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/13 04:09:38 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,24 +204,6 @@ typedef	struct s_data
 	t_generator		**generators;
 }				t_data;
 
-/*----------------------- sprites.c ----------------------*/
-
-void	draw_sprites(t_data *data);
-void	attack_sprite(t_data *data, t_list *list);
-int		there_is_sprite(t_data *data, t_sprite *sprite, int x, int y);
-void	sort_list(t_data *data, t_list **list);
-int		sprite_is_facing_left(t_data *data, t_sprite *sprite);
-int		create_trgb(int t, int r, int g, int b);
-
-
-/*-------------------- create_sprites.c -------------------*/
-
-t_sprite	new_sprite(int x, int y);
-t_sprite	new_teach(t_data *data, int x, int y);
-t_sprite	new_chopper(t_data *data, int x, int y);
-t_sprite	new_luffy(t_data *data, int x, int y);
-
-
 /*------------------------- main.c ------------------------*/
 
 double	fix_angle(double angle);
@@ -257,19 +239,54 @@ void	init_hands(t_data *data);
 
 /*------------------- load_sprites_imgs.c ------------------*/
 
-void		load_img(t_data *data, t_img *img, char *path);
-void		load_chopper_imgs(t_data *data, t_sprite_text *chopper);
-void		load_luffy_imgs(t_data *data, t_sprite_text *luffy);
-void		load_teach_imgs(t_data *data, t_sprite_text *teach);
+void	load_img(t_data *data, t_img *img, char *path);
+void	load_chopper_imgs(t_data *data, t_sprite_text *chopper);
+void	load_luffy_imgs(t_data *data, t_sprite_text *luffy);
+void	load_teach_imgs(t_data *data, t_sprite_text *teach);
 
 
-/*------------------------ parsing.c -----------------------*/
+/*------------------------ PARSING -----------------------*/
+//	parsing.c :
+int		is_map_surrounded(t_vars *vars, char **map);
+int		count_component(char **map, char c);
+void	init_player(t_data *data, int x, int y, char dir);
+int		parse_all(t_data *data, char *path, int description_map_start);
 
-int			parse_all(t_data *data, char *path, int description_map_start);
-void		free_sprite_imgs(t_data *data, t_sprite_text *texture);
-t_sprite	new_luffy(t_data *data, int x, int y);
+//	parse_texture.c :
+int		parse_identifier(t_data *data, int fd, int *description_map_start);
+
+//	parse_map.c :
+int		parse_map(
+		t_data *data, int fd, int description_map_start, char *config_path);
+
+//	fill_map.c :
+int		fill_map(t_data *data);
+
+
+/*----------------------- SPRITES ----------------------*/
+//	sprites.c :
+int			there_is_sprite(t_data *data, t_sprite *sprite, int x, int y);
+void		draw_sprites(t_data *data);
+
+//	draw_sprites.c :
+void		draw_sprite(t_data *data, t_sprite *s, t_img *t, double scale);
+t_img		*get_sprite_texture(t_player *player, t_sprite *sprite, double angle);
+
+//	attack_and_move_sprite.c :
+void		move_sprite(t_data *data, t_sprite *sprite, double scale, t_img **texture);
+void		attack_sprite(t_data *data, t_sprite *sprite);
+
+//	create_sprites.c :
 t_sprite	new_teach(t_data *data, int x, int y);
 t_sprite	new_chopper(t_data *data, int x, int y);
+t_sprite	new_luffy(t_data *data, int x, int y);
+
+//	sprites_utils :
+int			create_trgb(int t, int r, int g, int b);
+int			sprite_is_facing_left(t_data *data, t_sprite *sprite);
+void		free_dead_sprites(t_list **list);
+void		sort_list(t_data *data, t_list **list);
+double		calculate_sprite_angle(t_data *data, t_sprite *sprite);
 
 
 /*------------------------- gnl.c ------------------------*/
@@ -280,7 +297,7 @@ int		ft_strlen(char *str);
 
 /*--------------------- check_N_S_E_W.c --------------------*/
 
-int	there_is_door(t_data *data, double rx, double ry, int face);
+int		there_is_door(t_data *data, double rx, double ry, int face);
 
 void	find_distance(t_data *data, t_ray *ray, int face);
 void	check_north(t_data *data, t_ray *ray);

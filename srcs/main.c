@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/11 21:56:01 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/13 03:45:16 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -483,7 +483,6 @@ void	make_frame(t_data *data)
 	draw_rays(data);
 	manage_doors(data);
 	manage_generators(data, data->generators);
-	attack_sprite(data, data->sprites);
 	draw_sprites(data);
 	draw_hands(data);
 	display_center_cross(data);
@@ -491,7 +490,7 @@ void	make_frame(t_data *data)
 	draw_mini_map(data);
 	mlx_put_image_to_window(data->vars.mlx, data->vars.win,
 		data->frame.img, 0, 0);
-	if (data->generators[0] && data->generators[0]->wave > 0)
+	if (data->generators && data->generators[0] && data->generators[0]->wave > 0)
 		display_wave_nb(data);
 }
 

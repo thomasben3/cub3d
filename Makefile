@@ -1,8 +1,10 @@
 NAME		=	cub3D
 
 SRCS		= 	srcs/main.c \
-				srcs/sprites.c srcs/create_sprites.c \
-				srcs/parsing.c srcs/gnl.c srcs/load_sprites_imgs.c \
+				srcs/parsing/parsing.c srcs/parsing/parse_textures.c srcs/parsing/parse_map.c \
+				srcs/parsing/fill_map.c srcs/parsing/gnl.c \
+				srcs/sprites/sprites.c srcs/sprites/draw_sprite.c srcs/sprites/attack_and_move_sprite.c \
+				srcs/sprites/sprites_utils.c srcs/sprites/create_sprites.c srcs/sprites/load_sprites_imgs.c \
 				srcs/render.c srcs/check_N_S_E_W.c \
 				srcs/utils.c srcs/init.c srcs/events.c
 
