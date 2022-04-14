@@ -6,27 +6,25 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:45:06 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/13 04:18:33 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 01:48:57 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-void	draw_sky(int x, int start, int end, t_data *data)
+int	calculate_door_decalage(t_data *data, t_img **texture, t_ray *ray)
 {
-	int	x1;
+	int	i;
 
-	x1 = x + (data->img[CEILING].width / (2 * M_PI) * data->player.dir);
-	if (x1 >= data->img[CEILING].width)
-		x1 -= data->img[CEILING].width;
-	while (start < end)
-	{
-		data->frame.imgptr[start * (data->frame.sizeLine / 4) + x]
-			= data->img[CEILING].imgptr[(int)(data->img[CEILING].height - 350
-				- (data->horizon_line - start))
-			* (data->img[CEILING].sizeLine / 4) + x1];
-		start++;
-	}
+	if (data->vars.map[(int)ray->ry / CUBE_SIZE]
+		[(int)ray->rx / CUBE_SIZE] != 'D')
+		return (0);
+	*texture = &data->door_text;
+	i = 0;
+	while (data->doors[i] && (data->doors[i]->x != (int)ray->rx
+			/ CUBE_SIZE || data->doors[i]->y != (int)ray->ry / CUBE_SIZE))
+		i++;
+	return (data->doors[i]->start * (*texture)->width);
 }
 
 void	draw_raycast(t_data *data, t_ray *ray, int face)
@@ -35,25 +33,17 @@ void	draw_raycast(t_data *data, t_ray *ray, int face)
 	int		decalage;
 
 	texture = &data->img[face];
-	decalage = 0;
-	if (data->vars.map[(int)ray->ry / CUBE_SIZE]
-		[(int)ray->rx / CUBE_SIZE] == 'D')
-	{
-		texture = &data->door_text;
-		while (data->doors[decalage] && (data->doors[decalage]->x != (int)ray->rx / CUBE_SIZE || data->doors[decalage]->y != (int)ray->ry / CUBE_SIZE))
-			decalage++;
-		decalage = data->doors[decalage]->start * texture->width;
-	}
+	decalage = calculate_door_decalage(data, &texture, ray);
 	if (face == NORTH)
-		draw_text_vline(data, texture, *ray,
-			(((int)ray->rx % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width - decalage);
+		draw_text_vline(data, texture, *ray, (((int)ray->rx % CUBE_SIZE)
+				/ (double)CUBE_SIZE) * texture->width - decalage);
 	else if (face == SOUTH)
 		draw_text_vline(data, texture, *ray,
 			(texture->width - 1) - ((((int)ray->rx % CUBE_SIZE)
 					/ (double)CUBE_SIZE) * texture->width) + decalage);
 	else if (face == EAST)
-		draw_text_vline(data, texture, *ray,
-			(((int)ray->ry % CUBE_SIZE) / (double)CUBE_SIZE) * texture->width - decalage);
+		draw_text_vline(data, texture, *ray, (((int)ray->ry % CUBE_SIZE)
+				/ (double)CUBE_SIZE) * texture->width - decalage);
 	else if (face == WEST)
 		draw_text_vline(data, texture, *ray,
 			(texture->width - 1) - ((((int)ray->ry % CUBE_SIZE)

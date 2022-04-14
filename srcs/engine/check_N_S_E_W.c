@@ -6,43 +6,20 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:49:48 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/10 19:35:48 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 02:03:35 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
-int	there_is_door(t_data *data, double rx, double ry, int face)
-{
-	int	i;
-
-	i = -1;
-	while (data->doors[++i])
-	{
-		if (data->doors[i]->x == (int)rx / CUBE_SIZE
-			&& data->doors[i]->y == (int)ry / CUBE_SIZE
-			&& (((face == NORTH || face == SOUTH)
-					&& (int)rx % CUBE_SIZE + 1
-					>= data->doors[i]->start * CUBE_SIZE)
-				|| ((face == EAST || face == WEST)
-					&& (int)ry % CUBE_SIZE + 1
-					>= data->doors[i]->start * CUBE_SIZE)))
-			return (1);
-	}
-	return (0);
-}
 
 void	find_distance(t_data *data, t_ray *ray, int face)
 {
 	int	i;
 	int	map_x;
 	int	map_y;
-	int	max;
 
-	max = sqrt((data->vars.mapWidth * data->vars.mapWidth)
-			+ (data->vars.mapHeight * data->vars.mapHeight));
 	i = 0;
-	while (i < max)
+	while (i < data->vars.ray_max_len)
 	{
 		map_x = (int)ray->rx / CUBE_SIZE;
 		map_y = (int)ray->ry / CUBE_SIZE;
@@ -57,12 +34,9 @@ void	find_distance(t_data *data, t_ray *ray, int face)
 			ray->ry += ray->ryo * 0.5;
 			break ;
 		}
-		else
-		{
-			ray->rx += ray->rxo;
-			ray->ry += ray->ryo;
-			i++;
-		}
+		ray->rx += ray->rxo;
+		ray->ry += ray->ryo;
+		i++;
 	}
 	ray->length = distance(data->player.x, data->player.y, ray->rx, ray->ry);
 }

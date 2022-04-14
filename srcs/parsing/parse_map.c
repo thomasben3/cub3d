@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:20:22 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 03:41:25 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 01:58:21 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	malloc_map(t_data *data, int *description_map_start, int fd)
 	get_map_height_and_width(data, fd,
 		description_map_start, get_next_line(fd));
 	close(fd);
+	data->vars.ray_max_len = sqrt((data->vars.mapWidth * data->vars.mapWidth)
+			+ (data->vars.mapHeight * data->vars.mapHeight));
 	data->vars.map
 		= (char **)malloc(sizeof(char *) * (data->vars.mapHeight + 1));
 	if (!data->vars.map)

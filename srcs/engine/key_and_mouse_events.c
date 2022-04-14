@@ -6,11 +6,11 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:10:13 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/08 18:25:33 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 02:24:54 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 int	key_press(int keycode, void *data1)
 {
@@ -61,7 +61,6 @@ int	key_release(int keycode, void *keys1)
 		keys->esp = 0;
 	else if (keycode == ENTER)
 		keys->enter = 0;
-	//printf("%d\n",keycode);
 	return (0);
 }
 
@@ -106,9 +105,7 @@ int	mouse_move(int x, int y, void *data1)
 int	mouse_click(int button, int x, int y, void *data1)
 {
 	t_data	*data;
-	int i = 0;
 
-	(void)x;
 	(void)y;
 	data = (t_data *)data1;
 	if (button == 1 && data->player.life > 0)
@@ -119,12 +116,16 @@ int	mouse_click(int button, int x, int y, void *data1)
 				/ CUBE_SIZE]
 			== 'D')
 	{
-		while (data->doors[i] && (data->doors[i]->x != (int)(data->player.x - data->player.dx * CUBE_SIZE) / CUBE_SIZE || data->doors[i]->y != (int)(data->player.y + data->player.dy * CUBE_SIZE) / CUBE_SIZE))
-			i++;
-		if (data->doors[i] && data->doors[i]->count == -1)
+		x = 0;
+		while (data->doors[x] && (data->doors[x]->x
+				!= (int)(data->player.x - data->player.dx * CUBE_SIZE)
+			/ CUBE_SIZE || data->doors[x]->y != (int)(data->player.y
+			+ data->player.dy * CUBE_SIZE) / CUBE_SIZE))
+			x++;
+		if (data->doors[x] && data->doors[x]->count == -1)
 		{
-			data->doors[i]->count = 0;
-			data->doors[i]->last_frame = get_timestamp();
+			data->doors[x]->count = 0;
+			data->doors[x]->last_frame = get_timestamp();
 		}
 	}
 	return (0);

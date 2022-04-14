@@ -5,8 +5,10 @@ SRCS		= 	srcs/main.c \
 				srcs/parsing/fill_map.c srcs/parsing/gnl.c \
 				srcs/sprites/sprites.c srcs/sprites/draw_sprite.c srcs/sprites/attack_and_move_sprite.c \
 				srcs/sprites/sprites_utils.c srcs/sprites/create_sprites.c srcs/sprites/load_sprites_imgs.c \
-				srcs/render.c srcs/check_N_S_E_W.c \
-				srcs/utils.c srcs/init.c srcs/events.c
+				srcs/engine/render.c srcs/engine/check_N_S_E_W.c srcs/engine/draw.c srcs/engine/loop_hook.c \
+				srcs/engine/key_and_mouse_events.c srcs/engine/player_controls.c srcs/engine/player_skills.c \
+				srcs/engine/doors_and_generators.c srcs/engine/minimap_and_life.c srcs/engine/engine_utils.c \
+				srcs/utils/utils.c srcs/utils/list.c srcs/utils/color.c srcs/utils/init.c srcs/utils/free_and_exit.c \
 
 OBJS 		=	${SRCS:.c=.o}
 

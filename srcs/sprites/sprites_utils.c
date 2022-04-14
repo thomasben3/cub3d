@@ -6,16 +6,11 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:59:41 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 04:01:06 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 01:27:25 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
 
 int	sprite_is_facing_left(t_data *data, t_sprite *sprite)
 {

@@ -6,11 +6,11 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:43:00 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/10 04:10:57 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 02:05:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 void	free_double_array(char **array)
 {
@@ -33,31 +33,6 @@ int	ft_putstr_error(char *str)
 		if (write(2, &str[i], 1) == -1)
 			return (1);
 	return (1);
-}
-
-t_list	*listlast(t_list *list)
-{
-	t_list	*curr;
-
-	curr = list;
-	while (curr->next)
-		curr = curr->next;
-	return (curr);
-}
-
-void	push_back(t_list **list, t_sprite sprite)
-{
-	t_list	*new_cell;
-
-	new_cell = (t_list *)malloc(sizeof(t_list));
-	if (!new_cell)
-		return ;
-	new_cell->next = NULL;
-	new_cell->sprite = sprite;
-	if (!*list)
-		*list = new_cell;
-	else
-		listlast(*list)->next = new_cell;
 }
 
 char	*ft_join(char *s1, char *s2)
