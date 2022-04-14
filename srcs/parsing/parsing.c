@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 19:39:20 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 03:40:14 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:48:34 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ int	check_map_extremities(t_vars *vars, char **map)
 	y = -1;
 	while (map[++y])
 		if ((map[y][0] != '1' && map[y][0] != ' ')
-			|| (map[y][vars->mapWidth - 1] != '1'
-				&& map[y][vars->mapWidth - 1] != ' '))
+			|| (map[y][vars->map_width - 1] != '1'
+				&& map[y][vars->map_width - 1] != ' '))
 			return (1);
 	x = -1;
-	while (++x < vars->mapWidth)
+	while (++x < vars->map_width)
 		if ((map[0][x] != '1' && map[0][x] != ' ')
-			|| (map[vars->mapHeight - 1][x] != '1'
-				&& map[vars->mapHeight - 1][x] != ' '))
+			|| (map[vars->map_height - 1][x] != '1'
+				&& map[vars->map_height - 1][x] != ' '))
 			return (1);
 	return (0);
 }
@@ -46,11 +46,11 @@ int	is_map_surrounded(t_vars *vars, char **map)
 		while (map[y][++x])
 		{
 			if ((map[y][x] == ' ')
-				&& ((x + 1 < vars->mapWidth && map[y][x + 1] != '1'
+				&& ((x + 1 < vars->map_width && map[y][x + 1] != '1'
 					&& map[y][x + 1] != ' ')
 					|| (x - 1 >= 0 && map[y][x - 1] != '1'
 						&& map[y][x - 1] != ' ')
-					|| (y + 1 < vars->mapHeight && map[y + 1][x] != '1'
+					|| (y + 1 < vars->map_height && map[y + 1][x] != '1'
 						&& map[y + 1][x] != ' ')
 					|| (y - 1 >= 0 && map[y - 1][x] != '1'
 						&& map[y - 1][x] != ' ')))

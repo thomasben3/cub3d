@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:28:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 03:41:21 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:51:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	new_generator(t_data *data, int *count, int x, int y)
 		= (t_generator *)malloc(sizeof(t_generator));
 	if (!data->generators[*count])
 		return ;
-	data->generators[*count]->mapX = x;
-	data->generators[*count]->mapY = y;
+	data->generators[*count]->map_x = x;
+	data->generators[*count]->map_y = y;
 	data->generators[*count]->timer = -1;
 	data->generators[*count]->nb_gen = 0;
 	data->generators[(*count)++]->wave = 0;

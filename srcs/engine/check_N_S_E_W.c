@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:49:48 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/14 02:03:35 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:53:01 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	check_north(t_data *data, t_ray *ray)
 {
 	double	neg_i_tan;
 
-	neg_i_tan = -1 / tan(ray->Angle);
+	neg_i_tan = -1 / tan(ray->angle);
 	ray->ry
 		= ((int)data->player.y) - ((int)data->player.y % CUBE_SIZE) - 0.0001;
 	ray->rx = (data->player.y - ray->ry) * neg_i_tan + data->player.x;
@@ -58,7 +58,7 @@ void	check_south(t_data *data, t_ray *ray)
 {
 	double	neg_i_tan;
 
-	neg_i_tan = -1 / tan(ray->Angle);
+	neg_i_tan = -1 / tan(ray->angle);
 	ray->ry = ((int)data->player.y + CUBE_SIZE)
 		- ((int)data->player.y % CUBE_SIZE);
 	ray->rx = (data->player.y - ray->ry) * neg_i_tan + data->player.x;
@@ -71,7 +71,7 @@ void	check_east(t_data *data, t_ray *ray)
 {
 	double	neg_tan;
 
-	neg_tan = -tan(ray->Angle);
+	neg_tan = -tan(ray->angle);
 	ray->rx = ((int)data->player.x + CUBE_SIZE)
 		- ((int)data->player.x % CUBE_SIZE);
 	ray->ry = (data->player.x - ray->rx) * neg_tan + data->player.y;
@@ -84,7 +84,7 @@ void	check_west(t_data *data, t_ray *ray)
 {
 	double	neg_tan;
 
-	neg_tan = -tan(ray->Angle);
+	neg_tan = -tan(ray->angle);
 	ray->rx = ((int)data->player.x)
 		- ((int)data->player.x % CUBE_SIZE) - 0.0001;
 	ray->ry = (data->player.x - ray->rx) * neg_tan + data->player.y;

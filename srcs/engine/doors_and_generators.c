@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 02:32:34 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 02:33:29 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:51:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	generate_sprites(t_data *data, t_generator **generator,
 	while (generator[++i])
 	{
 		if (distance(data->player.x, data->player.y,
-				(generator[i]->mapX * CUBE_SIZE) + (CUBE_SIZE / 2),
-				(generator[i]->mapY * CUBE_SIZE) + (CUBE_SIZE / 2))
+				(generator[i]->map_x * CUBE_SIZE) + (CUBE_SIZE / 2),
+				(generator[i]->map_y * CUBE_SIZE) + (CUBE_SIZE / 2))
 			< CUBE_SIZE * 25
 			&& (get_timestamp() - generator[i]->timer > 10000
 				|| generator[i]->timer == -1)
@@ -28,13 +28,13 @@ void	generate_sprites(t_data *data, t_generator **generator,
 			percent = rand();
 			if (percent % 100 < 40)
 				push_back(&data->sprites,
-					new_luffy(data, generator[i]->mapX, generator[i]->mapY));
+					new_luffy(data, generator[i]->map_x, generator[i]->map_y));
 			else if (percent % 100 >= 40 && percent % 100 < 90)
 				push_back(&data->sprites,
-					new_chopper(data, generator[i]->mapX, generator[i]->mapY));
+					new_chopper(data, generator[i]->map_x, generator[i]->map_y));
 			else if (percent % 100 >= 90)
 				push_back(&data->sprites,
-					new_teach(data, generator[i]->mapX, generator[i]->mapY));
+					new_teach(data, generator[i]->map_x, generator[i]->map_y));
 			generator[i]->nb_gen++;
 			generator[i]->timer = get_timestamp();
 		}

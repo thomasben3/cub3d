@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 01:55:22 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 03:54:07 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:50:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	load_img(t_data *data, t_img *img, char *path)
 	img->img = mlx_xpm_file_to_image(data->vars.mlx, path,
 			&img->width, &img->height);
 	img->imgptr = (int *)mlx_get_data_addr(img->img,
-			&img->bitPerPx, &img->sizeLine,
+			&img->bit_per_px, &img->size_line,
 			&img->endian);
 }
 

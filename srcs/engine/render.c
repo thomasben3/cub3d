@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:45:06 by thbensem          #+#    #+#             */
-/*   Updated: 2022/04/14 01:48:57 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:53:07 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ t_ray	find_face_and_shortest_ray(t_ray v_ray, t_ray h_ray, int *face)
 {
 	if (v_ray.length < h_ray.length)
 	{
-		if (v_ray.Angle < 3 * (M_PI / 2) && v_ray.Angle > M_PI / 2)
+		if (v_ray.angle < 3 * (M_PI / 2) && v_ray.angle > M_PI / 2)
 			*face = EAST;
 		else
 			*face = WEST;
 		return (v_ray);
 	}
-	if (h_ray.Angle > M_PI)
+	if (h_ray.angle > M_PI)
 		*face = SOUTH;
 	else
 		*face = NORTH;
@@ -74,21 +74,21 @@ t_ray	find_face_and_shortest_ray(t_ray v_ray, t_ray h_ray, int *face)
 
 t_ray	raycasting(t_data *data, t_ray v_ray, t_ray h_ray, int *face)
 {
-	if (h_ray.Angle < M_PI)
+	if (h_ray.angle < M_PI)
 		check_north(data, &h_ray);
-	else if (h_ray.Angle > M_PI)
+	else if (h_ray.angle > M_PI)
 		check_south(data, &h_ray);
-	if (h_ray.Angle == M_PI || h_ray.Angle == 0)
+	if (h_ray.angle == M_PI || h_ray.angle == 0)
 	{
 		h_ray.rx = data->player.x;
 		h_ray.ry = data->player.y;
 		h_ray.length = 100000 * CUBE_SIZE;
 	}
-	if (v_ray.Angle > 3 * (M_PI / 2) || v_ray.Angle < M_PI / 2)
+	if (v_ray.angle > 3 * (M_PI / 2) || v_ray.angle < M_PI / 2)
 		check_west(data, &v_ray);
-	else if (v_ray.Angle < 3 * (M_PI / 2) && v_ray.Angle > M_PI / 2)
+	else if (v_ray.angle < 3 * (M_PI / 2) && v_ray.angle > M_PI / 2)
 		check_east(data, &v_ray);
-	else if (v_ray.Angle == 3 * (M_PI / 2) || v_ray.Angle == M_PI / 2)
+	else if (v_ray.angle == 3 * (M_PI / 2) || v_ray.angle == M_PI / 2)
 	{
 		v_ray.rx = data->player.x;
 		v_ray.ry = data->player.y;
@@ -102,14 +102,14 @@ void	draw_rays(t_data *data)
 	t_ray	ray;
 	int		face;
 
-	ray.Angle = fix_angle(data->player.dir - ((FOV / 2) * DEGREE));
+	ray.angle = fix_angle(data->player.dir - ((FOV / 2) * DEGREE));
 	face = -1;
 	ray.nb = -1;
 	while (++ray.nb < SCREEN_WIDTH)
 	{
 		ray = raycasting(data, ray, ray, &face);
 		if (!FISHEYE)
-			ray.length *= cos(fix_angle(data->player.dir - ray.Angle));
+			ray.length *= cos(fix_angle(data->player.dir - ray.angle));
 		ray.line_height = ((SCREEN_HEIGHT * CUBE_SIZE) / ray.length);
 		ray.line_start = -(ray.line_height * (1 - data->camera_height))
 			+ data->horizon_line;
@@ -121,6 +121,6 @@ void	draw_rays(t_data *data)
 			ray.line_end = SCREEN_HEIGHT - 1;
 		draw_raycast(data, &ray, face);
 		data->ray_save[ray.nb] = ray;
-		ray.Angle = fix_angle(ray.Angle + (DEGREE / (SCREEN_WIDTH / FOV)));
+		ray.angle = fix_angle(ray.angle + (DEGREE / (SCREEN_WIDTH / FOV)));
 	}
 }

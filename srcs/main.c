@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 02:08:45 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 03:05:13 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:50:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_point_cub(char *str)
 int	is_in_map(t_data *data, int x, int y)
 {
 	return (x >= 0 && y >= 0
-		&& x < data->vars.mapWidth && y < data->vars.mapHeight);
+		&& x < data->vars.map_width && y < data->vars.map_height);
 }
 
 int	init_all(t_data *d, char **argv)
@@ -59,7 +59,7 @@ int	init_all(t_data *d, char **argv)
 	init_keys(&d->keys);
 	d->frame.img = mlx_new_image(d->vars.mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	d->frame.imgptr = (int *)mlx_get_data_addr(d->frame.img,
-			&d->frame.bitPerPx, &d->frame.sizeLine, &d->frame.endian);
+			&d->frame.bit_per_px, &d->frame.size_line, &d->frame.endian);
 	d->last_frame_time = get_timestamp();
 	d->fps = 50;
 	return (0);

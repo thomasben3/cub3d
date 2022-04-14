@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 02:26:35 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 02:49:11 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:50:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	display_center_cross(t_data *data)
 	cross_color = create_rgb(150, 150, 150);
 	y = (SCREEN_HEIGHT / 2) - (SCREEN_HEIGHT * 0.01) - 1;
 	while (++y < (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.01))
-		data->frame.imgptr[y * data->frame.sizeLine / 4 + (SCREEN_WIDTH / 2)]
+		data->frame.imgptr[y * data->frame.size_line / 4 + (SCREEN_WIDTH / 2)]
 			= cross_color;
 	x = (SCREEN_WIDTH / 2) - (SCREEN_HEIGHT * 0.01) - 1;
 	while (++x < (SCREEN_WIDTH / 2) + (SCREEN_HEIGHT * 0.01))
-		data->frame.imgptr[(SCREEN_HEIGHT / 2) * data->frame.sizeLine / 4 + x]
+		data->frame.imgptr[(SCREEN_HEIGHT / 2) * data->frame.size_line / 4 + x]
 			= cross_color;
 }
 
@@ -42,12 +42,12 @@ void	draw_hands(t_data *data)
 		while (++y < data->hands[data->hands_to_display].height)
 		{
 			color = data->hands[data->hands_to_display].imgptr[y * data->hands[
-				data->hands_to_display].sizeLine / 4 + x];
+				data->hands_to_display].size_line / 4 + x];
 			if (color != create_trgb(255, 0, 0, 0) && x >= 0
 				&& x < SCREEN_WIDTH * 0.6 && y >= 0 && y < SCREEN_HEIGHT)
 				data->frame.imgptr[((SCREEN_HEIGHT - 1)
 						- data->hands[data->hands_to_display].height + y)
-					* (data->frame.sizeLine / 4)
+					* (data->frame.size_line / 4)
 					+ (int)(SCREEN_WIDTH * 0.4 + x)] = color;
 		}
 	}

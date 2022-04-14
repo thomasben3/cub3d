@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 00:51:24 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 03:46:04 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:52:59 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_vars
 
 	char	*config_file;
 	char	**map;
-	int		mapWidth;
-	int		mapHeight;
+	int		map_width;
+	int		map_height;
 	int		ray_max_len;
 }				t_vars;
 
@@ -62,15 +62,15 @@ typedef struct s_img
 	int		*imgptr;
 	int		height;
 	int		width;
-	int		bitPerPx;
-	int		sizeLine;
+	int		bit_per_px;
+	int		size_line;
 	int		endian;
 }				t_img;
 
 typedef struct s_generator
 {
-	int		mapX;
-	int		mapY;
+	int		map_x;
+	int		map_y;
 
 	long	timer;
 	int		wave;
@@ -141,7 +141,7 @@ typedef struct s_door
 typedef struct s_ray
 {
 	int		nb;
-	double	Angle;
+	double	angle;
 	double	ry;
 	double	rx;
 	double	ryo;

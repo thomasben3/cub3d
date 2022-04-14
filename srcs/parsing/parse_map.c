@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:20:22 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 01:58:21 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:48:34 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ void	get_map_height_and_width(
 	{
 		len = 0;
 		i = 0;
-		data->vars.mapHeight++;
+		data->vars.map_height++;
 		while (line[i] && line[i] != '\n')
 		{
 			i++;
 			len++;
 		}
-		if (len > data->vars.mapWidth)
-			data->vars.mapWidth = len;
+		if (len > data->vars.map_width)
+			data->vars.map_width = len;
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -57,16 +57,16 @@ void	get_map_height_and_width(
 
 int	malloc_map(t_data *data, int *description_map_start, int fd)
 {
-	data->vars.mapWidth = 0;
-	data->vars.mapHeight = 0;
+	data->vars.map_width = 0;
+	data->vars.map_height = 0;
 	(*description_map_start)--;
 	get_map_height_and_width(data, fd,
 		description_map_start, get_next_line(fd));
 	close(fd);
-	data->vars.ray_max_len = sqrt((data->vars.mapWidth * data->vars.mapWidth)
-			+ (data->vars.mapHeight * data->vars.mapHeight));
+	data->vars.ray_max_len = sqrt((data->vars.map_width * data->vars.map_width)
+			+ (data->vars.map_height * data->vars.map_height));
 	data->vars.map
-		= (char **)malloc(sizeof(char *) * (data->vars.mapHeight + 1));
+		= (char **)malloc(sizeof(char *) * (data->vars.map_height + 1));
 	if (!data->vars.map)
 	{
 		perror("Error\n");
@@ -82,7 +82,7 @@ int	fill_map_array(t_data *data, char **line, int i, int fd)
 	while (**line)
 	{
 		j = 0;
-		data->vars.map[i] = (char *)malloc(data->vars.mapWidth + 1);
+		data->vars.map[i] = (char *)malloc(data->vars.map_width + 1);
 		if (!data->vars.map[i])
 			return (1);
 		while ((*line)[j] && (*line)[j] != '\n')
@@ -93,7 +93,7 @@ int	fill_map_array(t_data *data, char **line, int i, int fd)
 				data->vars.map[i][j] = (*line)[j];
 			j++;
 		}
-		while (j < data->vars.mapWidth)
+		while (j < data->vars.map_width)
 			data->vars.map[i][j++] = ' ';
 		data->vars.map[i][j] = '\0';
 		free(*line);

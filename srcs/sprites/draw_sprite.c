@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:54:30 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 04:01:56 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:53:09 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ void	get_sprite_pixel(
 		color = sprite->text_in_use->imgptr[
 			(int)((sprite->text_in_use->height - 1)
 				- (int)((sprite->text_in_use->height - 1) * norm->text_y))
-			*(sprite->text_in_use->sizeLine / 4)
+			*(sprite->text_in_use->size_line / 4)
 			+ ((sprite->text_in_use->width - 1)
 				- (int)(((sprite->text_in_use->width) - 1) * norm->text_x))];
 	else
 		color = sprite->text_in_use->imgptr[
 			(int)((sprite->text_in_use->height - 1)
-				* (1 - norm->text_y)) *(sprite->text_in_use->sizeLine / 4)
+				* (1 - norm->text_y)) *(sprite->text_in_use->size_line / 4)
 			+ ((int)((sprite->text_in_use->width - 1) * norm->text_x))];
 	if (color != create_trgb(255, 0, 0, 0))
-		data->frame.imgptr[norm->y * data->frame.sizeLine / 4 + norm->x]
+		data->frame.imgptr[norm->y * data->frame.size_line / 4 + norm->x]
 			= shadow_color(color, distance(data->player.x,
 					data->player.y, sprite->x, sprite->y));
 }
@@ -79,7 +79,7 @@ int	need_to_draw_sprite_px(t_data *data, t_sprite *sprite, t_norm *norm)
 		&& (distance(data->player.x, data->player.y, sprite->x,
 				sprite->y) * cos(fix_angle(data->player.dir
 					- data->ray_save[(int)sprite->x_on_screen
-						+ norm->tmp].Angle))
+						+ norm->tmp].angle))
 			<= data->ray_save[(int)sprite->x_on_screen + norm->tmp].length)
 		&& norm->x >= 0 && norm->y >= 0 && norm->x < SCREEN_WIDTH
 		&& norm->y < SCREEN_HEIGHT);

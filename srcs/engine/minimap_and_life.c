@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 02:13:38 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/14 02:51:14 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:50:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ void	draw_life(t_data *data, int i, int y, int x)
 			if (x % 3 == 0)
 				i++;
 			if (data->player.life >= i)
-				data->frame.imgptr[(10 + y) * data->frame.sizeLine / 4
+				data->frame.imgptr[(10 + y) * data->frame.size_line / 4
 					+ (SCREEN_WIDTH - 10 - x)] = create_rgb(200, 0, 0);
 			else
-				data->frame.imgptr[(10 + y) * data->frame.sizeLine / 4
+				data->frame.imgptr[(10 + y) * data->frame.size_line / 4
 					+ (SCREEN_WIDTH - 10 - x)] = create_rgb(30, 30, 30);
 			if (y < 5 && x >= 60 * 3 - 1 && x <= 60 * 3 + 1)
-				data->frame.imgptr[(45 + y) * data->frame.sizeLine / 4
+				data->frame.imgptr[(45 + y) * data->frame.size_line / 4
 					+ (SCREEN_WIDTH - 10 - x)] = create_rgb(255, 255, 255);
 			else if (y < 5 && data->player.mana >= i)
-				data->frame.imgptr[(45 + y) * data->frame.sizeLine / 4
+				data->frame.imgptr[(45 + y) * data->frame.size_line / 4
 					+ (SCREEN_WIDTH - 10 - x)] = create_rgb(255, 210, 0);
 			else if (y < 5)
-				data->frame.imgptr[(45 + y) * data->frame.sizeLine / 4
+				data->frame.imgptr[(45 + y) * data->frame.size_line / 4
 					+ (SCREEN_WIDTH - 10 - x)] = create_rgb(175, 130, 0);
 		}
 		i = 0;
@@ -58,7 +58,7 @@ void	draw_square(t_data *data, int x, int y, int size)
 			x1 = 0;
 		while (x1 < x + size / 2 && x1 < SCREEN_WIDTH - 1)
 		{
-			data->frame.imgptr[y1 * (data->frame.sizeLine / 4) + x1]
+			data->frame.imgptr[y1 * (data->frame.size_line / 4) + x1]
 				= create_rgb(255, 0, 255);
 			x1++;
 		}
@@ -94,14 +94,14 @@ void	draw_minimap_line(t_data *data, float start_y, int y,
 		if (is_in_map(data, start_x / CUBE_SIZE, start_y / CUBE_SIZE)
 			&& data->vars.map[(int)start_y / CUBE_SIZE]
 			[(int)start_x / CUBE_SIZE] == '1')
-			data->frame.imgptr[y * data->frame.sizeLine / 4 + x] = 0xFFFFFFF;
+			data->frame.imgptr[y * data->frame.size_line / 4 + x] = 0xFFFFFFF;
 		else if (is_in_map(data, start_x / CUBE_SIZE, start_y / CUBE_SIZE)
 			&& data->vars.map[(int)start_y / CUBE_SIZE]
 			[(int)start_x / CUBE_SIZE] == 'D')
-			data->frame.imgptr[y * data->frame.sizeLine / 4 + x]
+			data->frame.imgptr[y * data->frame.size_line / 4 + x]
 				= create_rgb(255, 200, 0);
 		if (check_for_sprite(data, start_x, start_y))
-			data->frame.imgptr[y * data->frame.sizeLine / 4 + x]
+			data->frame.imgptr[y * data->frame.size_line / 4 + x]
 				= create_rgb(255, 0, 0);
 		start_x += CUBE_SIZE / 10;
 		x++;

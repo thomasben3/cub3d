@@ -6,7 +6,7 @@
 /*   By: tbensem <tbensem@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 03:11:36 by tbensem           #+#    #+#             */
-/*   Updated: 2022/04/13 03:31:36 by tbensem          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:50:05 by tbensem          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ int	check_for_identifier(t_data *data, char *str)
 	if (!data->img[face].img)
 		return (ft_putstr_error("Error\nTexture not found\n"));
 	data->img[face].imgptr = (int *)mlx_get_data_addr(
-			data->img[face].img, &data->img[face].bitPerPx,
-			&data->img[face].sizeLine, &data->img[face].endian);
+			data->img[face].img, &data->img[face].bit_per_px,
+			&data->img[face].size_line, &data->img[face].endian);
 	return (0);
 }
 
